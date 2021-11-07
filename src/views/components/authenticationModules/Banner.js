@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { InfoIcon, CloseIcon } from "@chakra-ui/icons";
+import { InfoIcon } from "@chakra-ui/icons";
 import { FiX } from "react-icons/fi";
 import {
   Box,

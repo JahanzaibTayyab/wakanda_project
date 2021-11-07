@@ -5,7 +5,7 @@ export const BannerLink = (props) => (
   <chakra.a
     {...props}
     px="4"
-    py="1.5"
+    py="1"
     textAlign="center"
     backgroundColor="white"
     textColor="blue.500"
