@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -17,6 +17,7 @@ import {
   InputRightAddon,
   VisuallyHidden,
 } from "@chakra-ui/react";
+import { useLocation } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { useToast } from "@chakra-ui/react";
 import { AiFillFacebook } from "react-icons/ai";
@@ -27,6 +28,7 @@ import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
 import { Toast } from "../../../constants/Toast";
+import Banner from "../../components/authenticationModules/Banner";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -42,8 +44,18 @@ const schema = yup.object().shape({
 
 const Login = (props) => {
   const toast = useToast();
+  const location = useLocation();
   const [show, setShow] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
+  const [email, setEmail] = useState("");
   const [toastType, setToastType] = useState("Custom Login");
+
+  useEffect(() => {
+    if (location.state?.forgetPassword && location.state?.email) {
+      setShowBanner(true);
+      setEmail(location.state?.email);
+    }
+  }, [location]);
 
   const {
     register,
@@ -56,6 +68,12 @@ const Login = (props) => {
   });
 
   const handleClick = () => setShow(!show);
+
+  const handleCloseIcon = () => {
+    setShowBanner(false);
+  };
+
+  const handleResendEmailClick = () => {};
 
   const handleSignInClick = () => {
     if (toastType === "Custom Login") {
@@ -167,7 +185,9 @@ const Login = (props) => {
               >
                 <Flex justify="space-between">
                   <FormLabel>Password</FormLabel>
-                  <Link fontWeight="bold">Forgot Password?</Link>
+                  <Link href="/forgetpassword" fontWeight="bold">
+                    Forgot Password?
+                  </Link>
                 </Flex>
                 <InputGroup size="md">
                   <Input
@@ -231,6 +251,14 @@ const Login = (props) => {
           </Card>
         </Box>
       </Box>
+      {showBanner && (
+        <Banner
+          email={email}
+          handleCloseIcon={handleCloseIcon}
+          handleResendEmailClick={handleResendEmailClick}
+          {...props}
+        />
+      )}
     </>
   );
 };
