@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -18,7 +18,7 @@ import {
   FormErrorMessage,
   InputRightAddon,
 } from "@chakra-ui/react";
-
+import { useHistory } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import { AiFillFacebook } from "react-icons/ai";
 import { FiExternalLink } from "react-icons/fi";
@@ -28,9 +28,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
-import Banner from "../../components/authenticationModules/Banner";
-import { auth } from "../../../utils/init-firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -49,14 +46,20 @@ const schema = yup.object().shape({
 });
 
 const Signup = (props) => {
-  const [email, setEmail] = useState("");
+  const history = useHistory();
   const [show, setShow] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showBanner, setShowBanner] = useState(false);
   const [checkedTermsAndCondition, setCheckedTermsAndCondition] =
     useState(false);
   const [checkedPrivacyPolicy, setCheckedPrivacyPolicy] = useState(false);
   const [emailAlreadyTaken, setEmailAlreadyTaken] = useState(false);
+
+  useEffect(() => {
+    const { emailAlreadyTaken } = props;
+    if (emailAlreadyTaken) {
+      setEmailAlreadyTaken(true);
+    }
+  }, [props.signInResponse, props.emailAlreadyTaken]);
 
   const {
     register,
@@ -68,11 +71,6 @@ const Signup = (props) => {
     resolver: yupResolver(schema),
   });
 
-  const handleSignUpClick = () => {
-    window.scrollTo(0, document.body.scrollHeight);
-    setShowBanner(true);
-  };
-
   const handleShowConfirmPasswordClick = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
@@ -83,35 +81,11 @@ const Signup = (props) => {
 
   const handleClick = () => setShow(!show);
 
-  const handleCloseIcon = () => {
-    setShowBanner(false);
-  };
-
   const handleResendEmailClick = () => {};
 
-  const onSubmit = async (register) => {
-    createUserWithEmailAndPassword(auth, register.email, register.password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        console.log(errorCode);
-
-        const errorMessage = error.message;
-        console.log(errorMessage);
-        // ..
-      });
-
-    setEmail(register.email);
+  const onSubmit = async (values) => {
+    props.signUp({ email: values.email, password: values.password, history });
     reset();
-  };
-
-  const onChangeEmail = (e) => {
-    console.log(e.target.value);
   };
 
   return (
@@ -155,7 +129,9 @@ const Signup = (props) => {
                   type="email"
                   name="email"
                   {...register("email")}
-                  onFocus={onChangeEmail}
+                  onChange={() =>
+                    emailAlreadyTaken && setEmailAlreadyTaken(false)
+                  }
                 />
 
                 <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
@@ -296,14 +272,6 @@ const Signup = (props) => {
           </Card>
         </Box>
       </Box>
-      {showBanner && (
-        <Banner
-          email={email}
-          handleCloseIcon={handleCloseIcon}
-          handleResendEmailClick={handleResendEmailClick}
-          {...props}
-        />
-      )}
     </>
   );
 };

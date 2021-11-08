@@ -3,7 +3,7 @@ import { SIGN_IN, SIGN_IN_SUCCESS, SIGN_IN_FAILURE } from "../types";
 const INIT_STATE = {
   user: {},
   response: "",
-  loading: false
+  loading: false,
 };
 
 const SignIn = (state = INIT_STATE, action) => {
@@ -12,19 +12,19 @@ const SignIn = (state = INIT_STATE, action) => {
       return {
         ...state,
         user: action.payload,
-        loading: true
+        loading: true,
       };
     case SIGN_IN_SUCCESS:
       return {
         ...state,
         response: action.payload,
-        loading: false
+        loading: false,
       };
     case SIGN_IN_FAILURE:
       return {
         ...state,
         response: action.payload,
-        loading: false
+        loading: false,
       };
     default:
       return state;

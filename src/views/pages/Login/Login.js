@@ -29,8 +29,9 @@ import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
 import { Toast } from "../../../constants/Toast";
 import Banner from "../../components/authenticationModules/Banner";
-import { signInWithEmailAndPassword } from "@firebase/auth";
-import { auth } from "../../../utils/init-firebase";
+import { LocalStorage } from "../../../constants/LocalStorage";
+// import { signInWithEmailAndPassword } from "@firebase/auth";
+// import { auth } from "../../../utils/init-firebase";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -57,6 +58,10 @@ const Login = (props) => {
       setShowBanner(true);
       setEmail(location.state?.email);
     }
+    if (location?.search) {
+      setShowBanner(true);
+      setEmail(localStorage.getItem(LocalStorage.WAKANDA_EMAIL));
+    }
   }, [location]);
 
   const {
@@ -75,7 +80,9 @@ const Login = (props) => {
     setShowBanner(false);
   };
 
-  const handleResendEmailClick = () => {};
+  const handleResendEmailClick = () => {
+    props.reSendEmail({ email });
+  };
 
   const handleSignInClick = () => {
     if (toastType === "Custom Login") {
@@ -137,17 +144,17 @@ const Login = (props) => {
 
   const onSubmit = async (register) => {
     console.log(register);
-    signInWithEmailAndPassword(auth, register.email, register.password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log(user);
-        // ...
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+    // signInWithEmailAndPassword(auth, register.email, register.password)
+    //   .then((userCredential) => {
+    //     // Signed in
+    //     const user = userCredential.user;
+    //     console.log(user);
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+    //   });
 
     reset();
   };
