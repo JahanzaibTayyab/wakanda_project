@@ -29,6 +29,8 @@ import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
 import Banner from "../../components/authenticationModules/Banner";
+import { auth } from "../../../utils/init-firebase";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -87,9 +89,24 @@ const Signup = (props) => {
 
   const handleResendEmailClick = () => {};
 
-  const onSubmit = (values) => {
-    console.log(values);
-    setEmail(values.email);
+  const onSubmit = async (register) => {
+    createUserWithEmailAndPassword(auth, register.email, register.password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        console.log(user);
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        console.log(errorCode);
+
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        // ..
+      });
+
+    setEmail(register.email);
     reset();
   };
 
