@@ -7,10 +7,13 @@ import {
   reSendEmailSuccess,
   reSendEmailFailure,
 } from "../actions/SignIn";
-import axios from "axios";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { LocalStorage } from "../../constants/LocalStorage";
 
 const signInUserApi = async (payload) => {
-  // api call
+  const auth = getAuth();
+  const { email, password } = payload;
+  return signInWithEmailAndPassword(auth, email, password);
 };
 
 function* signIn({ payload }) {
@@ -21,17 +24,18 @@ function* signIn({ payload }) {
       signInUserApi,
       payload
     );
-    if (response.status !== 200) {
-      yield put(signInFailure(response));
-    } else {
-      if (response?.data?.token) {
-        localStorage.setItem("token", response.data.token);
-        yield put(signInSuccess(response.data));
-        payload.history.push("/dashboard");
+    if (response) {
+      if (response.user.emailVerified) {
+        localStorage.setItem(LocalStorage.TOKEN, response.user.accessToken);
+        localStorage.setItem(LocalStorage.USER_ID, response.user.uid);
+        payload.history.push("/app/dashboard");
+        yield put(signInSuccess(response.user));
+      } else {
+        yield put(signInSuccess(response.user));
       }
     }
   } catch (error) {
-    yield put(signInFailure(error));
+    yield put(signInFailure(error.message));
   }
 }
 
@@ -43,7 +47,7 @@ const resendEmailApi = async (payload) => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve({ status: 200, data: "Email sent" });
-    }, 800);
+    }, 1200);
   });
 };
 

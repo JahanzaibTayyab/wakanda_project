@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
-import { useToast } from "@chakra-ui/react";
+import { useHistory } from "react-router-dom";
 import { AiFillFacebook } from "react-icons/ai";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
@@ -27,7 +27,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
-import { Toast } from "../../../constants/Toast";
 import Banner from "../../components/authenticationModules/Banner";
 import { LocalStorage } from "../../../constants/LocalStorage";
 // import { signInWithEmailAndPassword } from "@firebase/auth";
@@ -46,12 +45,11 @@ const schema = yup.object().shape({
 });
 
 const Login = (props) => {
-  const toast = useToast();
   const location = useLocation();
+  const history = useHistory();
   const [show, setShow] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [email, setEmail] = useState("");
-  const [toastType, setToastType] = useState("Custom Login");
 
   useEffect(() => {
     if (location.state?.forgetPassword && location.state?.email) {
@@ -80,6 +78,7 @@ const Login = (props) => {
 
   const handleCloseIcon = () => {
     setShowBanner(false);
+    setEmail("");
     localStorage.removeItem(LocalStorage.WAKANDA_EMAIL);
   };
 
@@ -87,78 +86,12 @@ const Login = (props) => {
     props.reSendEmail({ email });
   };
 
-  const handleSignInClick = () => {
-    if (toastType === "Custom Login") {
-      toast({
-        position: "bottom-right",
-        title: Toast.EmailVerification.error.title,
-        description: Toast.EmailVerification.error.description,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      toast({
-        position: "bottom-right",
-        title: Toast.EmailVerification.success.title,
-        description: Toast.EmailVerification.success.description,
-        status: "success",
-        duration: 4000,
-        isClosable: true,
-      });
-      toast({
-        position: "bottom-right",
-        title: Toast.EmailVerification.info.title,
-        duration: 5000,
-        isClosable: true,
-      });
-    } else if (toastType === "Social Login") {
-      toast({
-        position: "bottom-right",
-        title: Toast.SocialLoginVerification.error.title,
-        description: Toast.SocialLoginVerification.error.description,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      toast({
-        position: "bottom-right",
-        title: Toast.SocialLoginVerification.success.title,
-        description: Toast.SocialLoginVerification.success.description,
-        status: "success",
-        duration: 4000,
-        isClosable: true,
-      });
-      toast({
-        position: "bottom-right",
-        title: Toast.SocialLoginVerification.info.title,
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  const handleGoogleClick = () => {};
 
-  const handleGoogleClick = () => {
-    setToastType("Social Login");
-  };
+  const handleFaceBookClick = () => {};
 
-  const handleFaceBookClick = () => {
-    setToastType("Social Login");
-  };
-
-  const onSubmit = async (register) => {
-    console.log(register);
-    // signInWithEmailAndPassword(auth, register.email, register.password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user = userCredential.user;
-    //     console.log(user);
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //   });
-
+  const onSubmit = async (values) => {
+    props.signInUser({ history, ...values });
     reset();
   };
 
