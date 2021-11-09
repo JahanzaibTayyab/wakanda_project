@@ -40,7 +40,11 @@ function* signInUser() {
 }
 
 const resendEmailApi = async (payload) => {
-  // api call
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve({ status: 200, data: "Email sent" });
+    }, 800);
+  });
 };
 
 function* resendEmail({ payload }) {
@@ -54,7 +58,7 @@ function* resendEmail({ payload }) {
     if (response.status !== 200) {
       yield put(reSendEmailFailure(response));
     } else {
-      if (response?.data?.token) {
+      if (response) {
         yield put(reSendEmailSuccess(response.data));
       }
     }

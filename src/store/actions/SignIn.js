@@ -7,6 +7,10 @@ import {
   RESEND_EMAIL_FAILURE,
 } from "../types";
 
+export const resetSignInStates = () => ({
+  type: "RESET_SIGN_IN_STATES",
+});
+
 export const signIn = (user) => {
   return {
     type: SIGN_IN,

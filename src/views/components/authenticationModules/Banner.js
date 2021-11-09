@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { InfoIcon } from "@chakra-ui/icons";
 import { FiX } from "react-icons/fi";
 import {
@@ -14,12 +14,20 @@ const Banner = (props) => {
   const { email, handleCloseIcon, handleResendEmailClick } = props;
   const [buttonText, setButtonText] = useState("Resend email");
 
+  useEffect(() => {
+    const { emailSent } = props;
+    if (emailSent) {
+      setButtonText("Email Sent!");
+      setTimeout(() => {
+        setButtonText("Resend email");
+        props.resetSignInStates();
+      }, [3000]);
+    }
+  }, [props.emailSent]);
+
   const handleResendEmailLink = () => {
     setButtonText("Resending...");
     handleResendEmailClick();
-    setTimeout(() => {
-      setButtonText("Email Sent!");
-    }, [3000]);
   };
 
   return (

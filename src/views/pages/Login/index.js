@@ -1,24 +1,27 @@
 import React from "react";
 import { connect } from "react-redux";
 import Login from "./Login";
-import { reSendEmail } from "../../../store/actions/SignIn";
+import { reSendEmail, resetSignInStates } from "../../../store/actions/SignIn";
 
 const LoginContainer = (props) => {
   return <Login {...props} />;
 };
 
-const mapStateToProps = ({ SignUp }) => {
+const mapStateToProps = ({ SignUp, SignIn }) => {
   return {
-    userToken: SignUp?.response?.token,
-    loading: SignUp?.loading,
-    emailAlreadyTaken: SignUp?.emailTaken,
-    signInResponse: SignUp?.response,
+    emailSent: SignIn?.emailSent,
+    signInResponse: SignIn?.response,
+    user: SignIn?.user,
+    loading: SignIn?.loading,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
     reSendEmail: (userData) => {
       dispatch(reSendEmail(userData));
+    },
+    resetSignInStates: () => {
+      dispatch(resetSignInStates());
     },
   };
 };

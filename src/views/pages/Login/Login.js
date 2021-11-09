@@ -64,6 +64,8 @@ const Login = (props) => {
     }
   }, [location]);
 
+  useEffect(() => {}, [props.signInResponse]);
+
   const {
     register,
     handleSubmit,
@@ -78,6 +80,7 @@ const Login = (props) => {
 
   const handleCloseIcon = () => {
     setShowBanner(false);
+    localStorage.removeItem(LocalStorage.WAKANDA_EMAIL);
   };
 
   const handleResendEmailClick = () => {

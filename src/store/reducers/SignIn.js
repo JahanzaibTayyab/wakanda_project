@@ -10,11 +10,14 @@ import {
 const INIT_STATE = {
   user: {},
   response: "",
+  emailSent: false,
   loading: false,
 };
 
 const SignIn = (state = INIT_STATE, action) => {
   switch (action.type) {
+    case "RESET_SIGN_IN_STATES":
+      return INIT_STATE;
     case SIGN_IN:
       return {
         ...state,
@@ -42,6 +45,7 @@ const SignIn = (state = INIT_STATE, action) => {
       return {
         ...state,
         response: action.payload,
+        emailSent: true,
         loading: false,
       };
     case RESEND_EMAIL_FAILURE:
