@@ -9,6 +9,7 @@ import {
   FormLabel,
   Input,
   Stack,
+  useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
@@ -18,6 +19,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
+import { useAuth } from "../../../contexts/AuthContext";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -25,6 +27,8 @@ const schema = yup.object().shape({
 
 const ForgetPassword = (props) => {
   const history = useHistory();
+  const toast = useToast();
+  const { forgotPassword } = useAuth();
   const {
     register,
     handleSubmit,
@@ -35,12 +39,24 @@ const ForgetPassword = (props) => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = async (payload) => {
     reset();
-    history.push({
-      pathname: "/login",
-      state: { forgetPassword: "fromForgetPassword", email: values.email },
-    });
+    try {
+      await forgotPassword(payload.email);
+      history.push({
+        pathname: "/login",
+        state: { forgetPassword: "fromForgetPassword", email: payload.email },
+      });
+    } catch (error) {
+      console.log(error.message);
+      toast({
+        position: "bottom-right",
+        description: error.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

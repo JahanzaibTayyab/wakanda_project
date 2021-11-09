@@ -2,7 +2,7 @@ export const Toast = {
   EmailVerification: {
     info: {
       title: "Verifying email...",
-      duration: 3000,
+      duration: 6000,
     },
     success: {
       title: "Email verified!",
@@ -18,12 +18,12 @@ export const Toast = {
   SocialLoginVerification: {
     info: {
       title: "Connecting account...",
-      duration: 3000,
+      duration: 9000,
     },
     success: {
       title: "Account connected!",
       description: "Redirecting to dashboard in",
-      duration: 3000,
+      duration: 5000,
     },
     error: {
       title: "Couldn’t verify email",

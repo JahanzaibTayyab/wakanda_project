@@ -17,6 +17,7 @@ import {
   Checkbox,
   FormErrorMessage,
   InputRightAddon,
+  useToast,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
@@ -28,6 +29,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
+import { useAuth } from "../../../contexts/AuthContext";
+import { LocalStorage } from "../../../constants/LocalStorage";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -47,7 +50,9 @@ const schema = yup.object().shape({
 
 const Signup = (props) => {
   const history = useHistory();
+  const toast = useToast();
   const [show, setShow] = useState(false);
+  const { signInWithGoogle, registerUser, logout } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [checkedTermsAndCondition, setCheckedTermsAndCondition] =
     useState(false);
@@ -59,7 +64,7 @@ const Signup = (props) => {
     if (emailAlreadyTaken) {
       setEmailAlreadyTaken(true);
     }
-  }, [props.signInResponse, props.emailAlreadyTaken]);
+  }, [props.emailAlreadyTaken]);
 
   const {
     register,
@@ -81,10 +86,34 @@ const Signup = (props) => {
 
   const handleClick = () => setShow(!show);
 
-  const handleResendEmailClick = () => {};
-
-  const onSubmit = async (values) => {
-    props.signUp({ email: values.email, password: values.password, history });
+  const onSubmit = async (payload) => {
+    registerUser(payload.email, payload.password)
+      .then((res) => {
+        const data = {
+          ...res.user,
+          _tokenResponse: res._tokenResponse,
+        };
+        logout();
+        localStorage.setItem(LocalStorage.WAKANDA_EMAIL, payload.email);
+        props.signUpSuccess(data);
+        history.push({
+          pathname: "/login",
+          search: "?v=true",
+        });
+      })
+      .catch((error) => {
+        if (error.message.includes("email-already-in-use")) {
+          props.getAlreadyEmail(true);
+        } else {
+          toast({
+            position: "bottom-right",
+            description: error.message,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      });
     reset();
   };
 

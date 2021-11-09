@@ -5,12 +5,19 @@ import {
   RESEND_EMAIL_FAILURE,
   RESEND_EMAIL_SUCCESS,
   RESEND_EMAIL,
+  GOOGLE_SIGN_IN,
+  GOOGLE_SIGN_IN_SUCCESS,
+  GOOGLE_SIGN_IN_FAILURE,
+  FACEBOOK_SIGN_IN,
+  FACEBOOK_SIGN_IN_SUCCESS,
+  FACEBOOK_SIGN_IN_FAILURE,
 } from "../types";
 
 const INIT_STATE = {
-  user: {},
+  user: null,
   response: "",
   emailSent: false,
+  tokenVerified: false,
   loading: false,
 };
 
@@ -21,13 +28,12 @@ const SignIn = (state = INIT_STATE, action) => {
     case SIGN_IN:
       return {
         ...state,
-        user: action.payload,
         loading: true,
       };
     case SIGN_IN_SUCCESS:
       return {
         ...state,
-        response: action.payload,
+        user: action.payload,
         loading: false,
       };
     case SIGN_IN_FAILURE:
@@ -49,6 +55,42 @@ const SignIn = (state = INIT_STATE, action) => {
         loading: false,
       };
     case RESEND_EMAIL_FAILURE:
+      return {
+        ...state,
+        response: action.payload,
+        loading: false,
+      };
+    case GOOGLE_SIGN_IN:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GOOGLE_SIGN_IN_SUCCESS:
+      return {
+        ...state,
+        response: action.payload,
+        tokenVerified: true,
+        loading: false,
+      };
+    case GOOGLE_SIGN_IN_FAILURE:
+      return {
+        ...state,
+        response: action.payload,
+        loading: false,
+      };
+    case FACEBOOK_SIGN_IN:
+      return {
+        ...state,
+        loading: true,
+      };
+    case FACEBOOK_SIGN_IN_SUCCESS:
+      return {
+        ...state,
+        response: action.payload,
+        tokenVerified: true,
+        loading: false,
+      };
+    case FACEBOOK_SIGN_IN_FAILURE:
       return {
         ...state,
         response: action.payload,

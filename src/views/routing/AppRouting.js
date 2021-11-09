@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Login from "../pages/Login";
 import MainApp from "./MainApp";
 import SignUp from "../pages/Signup";
-import ForgetPassword from "../pages/ForgetPassword/ForgetPassword";
+import ForgetPassword from "../pages/ForgetPassword";
 
 export default function AppRouting() {
+  // localStorage.removeItem("token");
+  // localStorage.removeItem("userId");
   return (
     <Router>
       <div>
@@ -16,7 +18,7 @@ export default function AppRouting() {
           <Route path="/signup">
             <SignUp />
           </Route>
-          <Route path="/forgetpassword">
+          <Route path="/forget-password">
             <ForgetPassword />
           </Route>
           <Route path="/" component={MainApp} />

@@ -3,8 +3,18 @@ import { connect } from "react-redux";
 import Login from "./Login";
 import {
   reSendEmail,
+  reSendEmailSuccess,
+  reSendEmailFailure,
   resetSignInStates,
   signIn,
+  signInSuccess,
+  signInFailure,
+  googleSignIn,
+  googleSignInSuccess,
+  googleSignInFailure,
+  facebookSignIn,
+  facebookSignInSuccess,
+  facebookSignInFailure,
 } from "../../../store/actions/SignIn";
 
 const LoginContainer = (props) => {
@@ -24,11 +34,41 @@ const mapDispatchToProps = (dispatch) => {
     signInUser: (userData) => {
       dispatch(signIn(userData));
     },
+    signInSuccess: (userData) => {
+      dispatch(signInSuccess(userData));
+    },
+    signInFailure: (userData) => {
+      dispatch(signInFailure(userData));
+    },
     reSendEmail: (userData) => {
       dispatch(reSendEmail(userData));
     },
+    reSendEmailSuccess: (userData) => {
+      dispatch(reSendEmailSuccess(userData));
+    },
+    reSendEmailFailure: (userData) => {
+      dispatch(reSendEmailFailure(userData));
+    },
     resetSignInStates: () => {
       dispatch(resetSignInStates());
+    },
+    googleSignIn: (data) => {
+      dispatch(googleSignIn(data));
+    },
+    googleSignInSuccess: (data) => {
+      dispatch(googleSignInSuccess(data));
+    },
+    googleSignInFailure: (data) => {
+      dispatch(googleSignInFailure(data));
+    },
+    facebookSignIn: (data) => {
+      dispatch(facebookSignIn(data));
+    },
+    facebookSignInSuccess: (data) => {
+      dispatch(facebookSignInSuccess(data));
+    },
+    facebookSignInFailure: (data) => {
+      dispatch(facebookSignInFailure(data));
     },
   };
 };

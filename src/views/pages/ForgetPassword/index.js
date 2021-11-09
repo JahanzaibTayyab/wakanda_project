@@ -1,7 +1,8 @@
 import React from "react";
-import Login from "./Login";
+import ForgetPassword from "./ForgetPassword";
 
-const LoginContainer = (props) => {
-  return <Login {...props} />;
+const ForgetPasswordContainer = (props) => {
+  return <ForgetPassword {...props} />;
 };
-export default LoginContainer;
+
+export default ForgetPasswordContainer;

@@ -3,14 +3,16 @@ import { connect } from "react-redux";
 import { Redirect, Route } from "react-router-dom";
 import RctDefaultLayout from "./DefaultLayout";
 import AppSignIn from "../pages/Login";
+import { LocalStorage } from "../../constants/LocalStorage";
 
 const InitialPath = ({ component: Component, ...rest }) => (
   <Route {...rest} render={(props) => <Component {...props} />} />
 );
 
 const MainApp = (props) => {
+  console.log(localStorage.getItem(LocalStorage.TOKEN));
   const { location, match, user } = props;
-  if (localStorage.getItem("token") == null) {
+  if (localStorage.getItem(LocalStorage.TOKEN) == null) {
     if (location.pathname !== "/login") {
       return <Redirect to={"/login"} />;
     }
