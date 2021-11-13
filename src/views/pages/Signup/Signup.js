@@ -142,7 +142,7 @@ const Signup = (props) => {
           </Heading>
           <Text mt="4" mb="8" align="center" maxW="md" fontWeight="small">
             <Text as="span">Already have an account?</Text>
-            <Link href="/sigin" fontWeight="bold">
+            <Link href="/login" fontWeight="bold">
               Sign in
             </Link>
           </Text>

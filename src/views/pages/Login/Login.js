@@ -39,7 +39,6 @@ import {
   GoogleAuthProvider,
   getRedirectResult,
   FacebookAuthProvider,
-  signInWithRedirect,
 } from "@firebase/auth";
 
 const schema = yup.object().shape({
@@ -70,7 +69,7 @@ const Login = (props) => {
     onTimeOver: () => {
       localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
       localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
-      history.push("/app/dashboard");
+      history.push("/app/widgets/espresso");
     },
   });
   const {
@@ -184,7 +183,7 @@ const Login = (props) => {
         if (res.user.emailVerified) {
           localStorage.setItem(LocalStorage.TOKEN, res.user.accessToken);
           localStorage.setItem(LocalStorage.USER_ID, res.user.uid);
-          history.push("/app/dashboard");
+          history.push("/app/widgets/espresso");
         }
         logout();
         props.signInSuccess(res.user);
