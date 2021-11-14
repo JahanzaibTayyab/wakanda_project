@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-
+import EspressoContent from "../../components/espresso";
+import { FaReact } from "react-icons/fa";
 export const Dashboard = (props) => {
   return (
     <>
-      <div>Dashboard</div>
+      <EspressoContent {...props} refreshIcon={<FaReact />} title="Espresso" />
     </>
   );
 };

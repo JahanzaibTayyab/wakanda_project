@@ -39,7 +39,6 @@ import {
   GoogleAuthProvider,
   getRedirectResult,
   FacebookAuthProvider,
-  signInWithRedirect,
 } from "@firebase/auth";
 
 const schema = yup.object().shape({
@@ -59,6 +58,7 @@ const useQuery = () => {
 };
 
 const Login = (props) => {
+  const { userHasWorkSpace } = props;
   const location = useLocation();
   const query = useQuery();
   const history = useHistory();
@@ -68,9 +68,13 @@ const Login = (props) => {
     endTime: 5,
     initialTime: 1,
     onTimeOver: () => {
-      localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
-      localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
-      history.push("/app/dashboard");
+      if (userHasWorkSpace) {
+        localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
+        localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
+        history.push("/app/widgets/espresso");
+      } else {
+        history.push("/before");
+      }
     },
   });
   const {
@@ -184,7 +188,7 @@ const Login = (props) => {
         if (res.user.emailVerified) {
           localStorage.setItem(LocalStorage.TOKEN, res.user.accessToken);
           localStorage.setItem(LocalStorage.USER_ID, res.user.uid);
-          history.push("/app/dashboard");
+          history.push("/app/widgets/espresso");
         }
         logout();
         props.signInSuccess(res.user);

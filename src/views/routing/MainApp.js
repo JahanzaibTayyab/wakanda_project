@@ -10,14 +10,13 @@ const InitialPath = ({ component: Component, ...rest }) => (
 );
 
 const MainApp = (props) => {
-  console.log(localStorage.getItem(LocalStorage.TOKEN));
   const { location, match, user } = props;
   if (localStorage.getItem(LocalStorage.TOKEN) == null) {
     if (location.pathname !== "/login") {
       return <Redirect to={"/login"} />;
     }
   } else if (location.pathname === "/") {
-    return <Redirect to={"/app/dashboard"} />;
+    return <Redirect to={"/app/widgets/espresso"} />;
   }
   const defaultPath = `${match.url}app`;
   return (

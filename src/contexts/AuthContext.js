@@ -11,7 +11,6 @@ import {
   confirmPasswordReset,
   signInWithRedirect,
 } from "firebase/auth";
-
 const AuthContext = createContext({
   currentUser: null,
   signInWithGoogle: () => Promise,
@@ -57,7 +56,7 @@ export default function AuthContextProvider({ children }) {
 
   function forgotPassword(email) {
     return sendPasswordResetEmail(auth, email, {
-      url: `http://localhost:3000/login`,
+      url: `http://localhost:3005/login`,
     });
   }
 
