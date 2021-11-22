@@ -1,28 +1,55 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import {
   Box,
   Button,
   Heading,
   Text,
-  Stack,
+  Image,
   useColorModeValue,
-  Flex
+  Flex,
+  useToast,
 } from "@chakra-ui/react";
 import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
-import Card from "../../components/controls/Card";
 import { NotionLogo } from "../../components/controls/NotionLogo";
 import { useHistory } from "react-router-dom";
-const Notion1 = () => {
- const [notion, setNotion] = useState(false)
-  
-const history = useHistory();
-  const handleSubmit = () => {
-    setNotion(true)
-   setTimeout(()=>{
-  history.push("/onboard")
-   },1000)
-};
+import { notionOAuthUlr } from "../../../store/actions/NotionAuth";
+const Notion1 = (props) => {
+  const { redirectedUrl, error } = props;
+  const [notion, setNotion] = useState(true);
+  const toast = useToast();
+  const history = useHistory();
+
+  useEffect(() => {
+    props.notionOAuthUlr();
+  }, []);
+
+  useEffect(() => {
+    if (redirectedUrl) {
+      setNotion(false);
+    }
+  }, [redirectedUrl]);
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        position: "bottom-right",
+        title: error?.status,
+        description: error?.message,
+        duration: 6000,
+        status: "error",
+        isClosable: true,
+      });
+    }
+  }, [error]);
+
+  const handelClick = () => {
+    if (redirectedUrl) {
+      window.open(redirectedUrl, "_blank");
+      history.push("/onboard");
+    }
+  };
   return (
     <>
       <Box
@@ -44,41 +71,67 @@ const history = useHistory();
             }}
           />
           <Heading textAlign="center" size="xl" fontWeight="extrabold">
-          Connect Notion account
+            Connect Notion account
           </Heading>
-          <Text mt="4" mb="8" align="center" maxW="md" fontWeight="500" fontSize='18px'>
+          <Text
+            mt="4"
+            mb="8"
+            align="center"
+            maxW="md"
+            lineHeight={2}
+            fontStyle="normal"
+            fontWeight="500"
+            fontSize="18px"
+          >
             <Text as="span">Allow access to</Text>
-            <Link href="#" >
-            <Text as="u" mr='1'>Notion Coffe</Text>
+            <Link href="https://www.notion.coffee" target="_blank">
+              <Text as="u" mr="1">
+                Notion Coffee
+              </Text>
             </Link>
-            and share the Notion Coffe task management template duplicated in your workspace
+            and share the Notion Coffee task management template duplicated in
+            your workspace
           </Text>
-          <Flex justify='center' mb='2'>
-          <Button
-                type="submit"
-                variant="outline"
-                isLoading={notion}
-                leftIcon={<NotionLogo />}
-                loadingText= "... Loading Notion"
-                size="md"
-                fontSize="sm"
-                spinner
-                onClick={handleSubmit}
-              >
-                Connenct Notion
-              </Button>
-            </Flex> 
-          
-          <Card>
-            <Stack spacing="6">
-           
-            
-            </Stack>
-          </Card>
+          <Flex justify="center" mb="2">
+            <Button
+              type="submit"
+              variant="outline"
+              isLoading={notion}
+              leftIcon={<NotionLogo />}
+              loadingText="... Loading Notion"
+              size="md"
+              fontSize="sm"
+              spinner
+              onClick={handelClick}
+            >
+              Connect Notion
+            </Button>
+          </Flex>
+          <Image
+            src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/beforeStart.png?alt=media&token=222495a4-3651-4440-a9cf-3941fb08959a"
+            alt="Img"
+          />
         </Box>
       </Box>
     </>
   );
 };
 
-export default Notion1;
+const mapStateToProps = ({ NotionAuth }) => {
+  return {
+    loading: NotionAuth?.loading,
+    redirectedUrl: NotionAuth?.oauthUrl?.redirectUrl,
+    response: NotionAuth?.response,
+    error: NotionAuth?.error,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    notionOAuthUlr: (userData) => {
+      dispatch(notionOAuthUlr(userData));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Notion1);

@@ -11,9 +11,12 @@ import {
   FACEBOOK_SIGN_IN,
   FACEBOOK_SIGN_IN_SUCCESS,
   FACEBOOK_SIGN_IN_FAILURE,
-  REST_PASSWORD,
-  REST_PASSWORD_SUCCESS,
-  REST_PASSWORD_FAILURE,
+  USER_DATA,
+  USER_DATA_SUCCESS,
+  USER_DATA_FAILURE,
+  VERIFY_TOKEN,
+  VERIFY_TOKEN_SUCCESS,
+  VERIFY_TOKEN_FAILURE,
 } from "../types";
 
 export const resetSignInStates = () => ({
@@ -92,6 +95,44 @@ export const facebookSignInSuccess = (response) => {
 export const facebookSignInFailure = (response) => {
   return {
     type: FACEBOOK_SIGN_IN_FAILURE,
+    payload: response,
+  };
+};
+
+export const userData = (data) => {
+  return {
+    type: USER_DATA,
+    payload: data,
+  };
+};
+export const userDataSuccess = (response) => {
+  return {
+    type: USER_DATA_SUCCESS,
+    payload: response,
+  };
+};
+export const userDataFailure = (response) => {
+  return {
+    type: USER_DATA_FAILURE,
+    payload: response,
+  };
+};
+
+export const verifyToken = (data) => {
+  return {
+    type: VERIFY_TOKEN,
+    payload: data,
+  };
+};
+export const verifyTokenSuccess = (response) => {
+  return {
+    type: VERIFY_TOKEN_SUCCESS,
+    payload: response,
+  };
+};
+export const verifyTokenFailure = (response) => {
+  return {
+    type: VERIFY_TOKEN_FAILURE,
     payload: response,
   };
 };

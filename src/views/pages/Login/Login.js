@@ -17,7 +17,6 @@ import {
   useToast,
   InputRightAddon,
   VisuallyHidden,
-  chakra,
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 import { useTimer } from "use-timer";
@@ -73,24 +72,21 @@ const Login = (props) => {
         localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
         history.push("/app/widgets/espresso");
       } else {
+        localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
+        localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
         history.push("/before");
       }
     },
   });
-  const {
-    signInWithGoogle,
-    login,
-    logout,
-    verifyToken,
-    signInWithFacebook,
-    currentUser,
-  } = useAuth();
+  const { signInWithGoogle, login, logout, signInWithFacebook, currentUser } =
+    useAuth();
 
   const [show, setShow] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [email, setEmail] = useState("");
   const [disabledForm, setDisabledForm] = useState(false);
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+  const [socialLogin, setSocialLogin] = useState(false);
 
   useEffect(() => {
     getRedirectResult(auth)
@@ -125,16 +121,12 @@ const Login = (props) => {
         isClosable: true,
       });
       setDisabledForm(true);
-      verifyToken(query.get("oauthToken")).then((res) => {
-        start();
-        toast({
-          position: "bottom-right",
-          title: Toast.SocialLoginVerification.success.title,
-          description: `${Toast.SocialLoginVerification.success.description} ${time} `,
-          duration: Toast.SocialLoginVerification.success.duration,
-          status: "success",
-          isClosable: true,
-        });
+      setSocialLogin(true);
+      props.verifyToken({
+        token: query.get("oauthToken"),
+        socialLogin: true,
+        user: currentUser,
+        history,
       });
     }
   }, [location]);
@@ -148,6 +140,24 @@ const Login = (props) => {
       }
     }
   }, [props.user]);
+
+  useEffect(() => {
+    const { tokenVerified } = props;
+    if (socialLogin) {
+      if (tokenVerified) {
+        setSocialLogin(false);
+        start();
+        toast({
+          position: "bottom-right",
+          title: Toast.SocialLoginVerification.success.title,
+          description: `${Toast.SocialLoginVerification.success.description} ${time} `,
+          duration: Toast.SocialLoginVerification.success.duration,
+          status: "success",
+          isClosable: true,
+        });
+      }
+    }
+  }, [props.user, props.userHasWorkSpace, props.tokenVerified]);
 
   const {
     register,
@@ -172,11 +182,13 @@ const Login = (props) => {
   };
 
   const handleGoogleClick = () => {
+    setSocialLogin(true);
     setIsGoogleLogin(true);
     signInWithGoogle();
   };
 
   const handleFaceBookClick = () => {
+    setSocialLogin(true);
     setIsGoogleLogin(false);
     signInWithFacebook();
   };
@@ -186,12 +198,15 @@ const Login = (props) => {
     login(payload.email, payload.password)
       .then((res) => {
         if (res.user.emailVerified) {
-          localStorage.setItem(LocalStorage.TOKEN, res.user.accessToken);
-          localStorage.setItem(LocalStorage.USER_ID, res.user.uid);
-          history.push("/app/widgets/espresso");
+          props.signInSuccess(res.user);
+          props.userData({ user: res.user, history });
+          // localStorage.setItem(LocalStorage.TOKEN, res.user.accessToken);
+          // localStorage.setItem(LocalStorage.USER_ID, res.user.uid);
+          // history.push("/app/widgets/espresso");
+        } else {
+          logout();
+          props.signInSuccess(res.user);
         }
-        logout();
-        props.signInSuccess(res.user);
       })
       .catch((error) => {
         props.signInFailure(error.message);

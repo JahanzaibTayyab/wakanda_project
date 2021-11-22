@@ -4,21 +4,20 @@ import {
   Button,
   Heading,
   Text,
-  Stack,
   useColorModeValue,
-  Flex
+  Flex,
+  Image,
 } from "@chakra-ui/react";
 import { Logo } from "../../components/controls/Logo";
 import Link from "../../components/controls/Link";
-import Card from "../../components/controls/Card";
 import { useHistory } from "react-router-dom";
 
-const BeforeStart = () => {
+const BeforeStart = (props) => {
   const history = useHistory();
 
-  const handleSubmit = () => {
-   history.push("/notion1");
-};
+  const handelClick = () => {
+    history.push("/notion1");
+  };
   return (
     <>
       <Box
@@ -42,30 +41,41 @@ const BeforeStart = () => {
           <Heading textAlign="center" size="xl" fontWeight="extrabold">
             Before we start...
           </Heading>
-          <Text mt="4" mb="8" align="center" maxW="md" fontWeight="500" fontSize='18px'>
+          <Text
+            mt="4"
+            mb="8"
+            align="center"
+            maxW="md"
+            fontStyle="normal"
+            lineHeight={2}
+            fontWeight="500"
+            fontSize="18px"
+          >
             <Text as="span">Duplicate the</Text>
-            <Link href="#" >
-            <Text as="u" mr='1'>Task Management Template</Text>
+            <Link href="https://www.notion.coffee" target="_blank">
+              <Text as="u" mr="1">
+                Task Management Template
+              </Text>
             </Link>
-            in your workspace. Notion Coffee needs a database with certain properties to work.
+            in your workspace. Notion Coffee needs a database with certain
+            properties to work.
           </Text>
-          <Flex justify='center' mb='2'>
-          <Button
-                type="submit"
-                colorScheme="teal"
-                size="md"
-                fontSize="sm"
-                onClick={handleSubmit}
-              >
-                Continue
-              </Button>
-            </Flex>
-          <Card>
-            <Stack spacing="6">
-           
-            
-            </Stack>
-          </Card>
+          <Flex justify="center" mb="2">
+            <Button
+              type="submit"
+              colorScheme="teal"
+              size="md"
+              fontSize="sm"
+              onClick={handelClick}
+            >
+              Continue
+            </Button>
+          </Flex>
+
+          <Image
+            src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/beforeStart.png?alt=media&token=222495a4-3651-4440-a9cf-3941fb08959a"
+            alt="Img"
+          />
         </Box>
       </Box>
     </>

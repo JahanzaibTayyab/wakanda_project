@@ -1,5 +1,5 @@
 import { CheckIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { BsFillPlayFill } from "react-icons/bs";
+import { BsFillPlayFill, BsExclamation } from "react-icons/bs";
 import {
   Box,
   Circle,
@@ -14,12 +14,13 @@ import { useStep } from "./useStep";
 
 export const Step = (props) => {
   const { title, children, isError, ...boxProps } = props;
-  const { isActive, isCompleted, step } = useStep();
+  const { isActive, isCompleted } = useStep();
   const accentColor = useColorModeValue("yellow.500", "yellow.300");
   const mutedColor = useColorModeValue("gray.600", "whiteAlpha.800");
   const activeColor = useColorModeValue("white", "black");
   const successColor = useColorModeValue("green.500", "white");
   const errorColor = useColorModeValue("red.400", "white");
+  const unActiveColor = useColorModeValue("gray.400", "gray.200");
   return (
     <Box {...boxProps} mb="8">
       <HStack spacing="4">
@@ -30,27 +31,37 @@ export const Step = (props) => {
             isActive ? activeColor : isCompleted ? accentColor : mutedColor
           }
           bg={
-            isActive
-              ? accentColor
+            isError
+              ? errorColor
               : isCompleted
               ? successColor
-              : isError
-              ? errorColor
+              : isActive
+              ? accentColor
               : "transparent"
           }
         >
-          {isActive ? (
-            <Icon as={BsFillPlayFill} />
+          {isError ? (
+            <Icon as={BsExclamation} color="white" w={12} h={12} />
           ) : isCompleted ? (
-            <Icon as={CheckIcon} />
+            <Icon as={CheckIcon} color="white" w={6} h={6} />
+          ) : isActive ? (
+            <Icon as={BsFillPlayFill} w={6} h={6} />
           ) : (
-            <Icon as={ChevronRightIcon} style={{ size: "15px" }} />
+            <Icon as={ChevronRightIcon} color="gray.400" w={12} h={12} />
           )}
         </Circle>
         <Heading
           fontSize="lg"
-          fontWeight="semibold"
-          color={isActive || isCompleted ? "inherit" : mutedColor}
+          fontWeight={isActive || isCompleted ? "semibold" : "normal"}
+          color={
+            isError
+              ? errorColor
+              : isCompleted
+              ? mutedColor
+              : isActive
+              ? accentColor
+              : unActiveColor
+          }
         >
           {title}
         </Heading>

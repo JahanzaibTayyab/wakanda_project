@@ -1,5 +1,4 @@
 import * as React from "react";
-import { StepConnector } from "./StepConnector";
 import { StepContext } from "./StepContext";
 
 export const Steps = (props) => {

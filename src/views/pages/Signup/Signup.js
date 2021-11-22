@@ -52,7 +52,7 @@ const Signup = (props) => {
   const history = useHistory();
   const toast = useToast();
   const [show, setShow] = useState(false);
-  const { signInWithGoogle, registerUser, logout } = useAuth();
+  const { registerUser, logout } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [checkedTermsAndCondition, setCheckedTermsAndCondition] =
     useState(false);

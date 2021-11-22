@@ -27,6 +27,7 @@ import { ModalToast } from "../../../constants/_data/Mockup";
 
 const DashboardContent = (props) => {
   const { title } = props;
+
   const toast = useToast();
 
   const [enableSwitch, setEnabledSwitch] = useState(false);
@@ -258,7 +259,6 @@ const DashboardContent = (props) => {
                   size="sm"
                   fontSize="sm"
                   fontWeight={500}
-                  width="45%"
                   textAlign="left"
                   bg="white"
                   borderWidth="1px"
@@ -349,7 +349,6 @@ const DashboardContent = (props) => {
                   size="sm"
                   fontSize="sm"
                   fontWeight={500}
-                  width="45%"
                   textAlign="left"
                   bg="white"
                   borderWidth="1px"
