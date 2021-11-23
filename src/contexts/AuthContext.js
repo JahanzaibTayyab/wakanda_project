@@ -15,6 +15,7 @@ import {
   getAuth,
   verifyPasswordResetCode,
   checkActionCode,
+  applyActionCode,
 } from "firebase/auth";
 const AuthContext = createContext({
   currentUser: null,
@@ -30,6 +31,7 @@ const AuthContext = createContext({
   sendUserEmailVerification: () => Promise(),
   checkActionCodeVerification: () => Promise(),
   verifyPasswordResetCodeVerification: () => Promise(),
+  applyActionCodeVerification: () => Promise(),
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -100,6 +102,9 @@ export default function AuthContextProvider({ children }) {
   function verifyPasswordResetCodeVerification(actionCode) {
     return verifyPasswordResetCode(auth, actionCode);
   }
+  function applyActionCodeVerification(actionCode) {
+    return applyActionCode(auth, actionCode);
+  }
 
   const value = {
     currentUser,
@@ -115,6 +120,7 @@ export default function AuthContextProvider({ children }) {
     sendUserEmailVerification,
     checkActionCodeVerification,
     verifyPasswordResetCodeVerification,
+    applyActionCodeVerification,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

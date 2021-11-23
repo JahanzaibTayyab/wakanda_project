@@ -50,7 +50,7 @@ function* getUserDocument({ payload }) {
           if (payload.user?.emailVerified) {
             localStorage.setItem(LocalStorage.TOKEN, payload.user.accessToken);
             localStorage.setItem(LocalStorage.USER_ID, payload.user.uid);
-            payload.history.push("/app/before");
+            payload.history.push("/before");
           }
         }
         yield put(

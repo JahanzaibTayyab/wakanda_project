@@ -83,11 +83,10 @@ const Login = (props) => {
     login,
     logout,
     signInWithFacebook,
-    checkActionCodeVerification,
+    applyActionCodeVerification,
     sendUserEmailVerification,
     currentUser,
   } = useAuth();
-
   const [show, setShow] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [email, setEmail] = useState("");
@@ -222,7 +221,6 @@ const Login = (props) => {
           props.signInSuccess(res.user);
           props.userData({ user: res.user, history });
         } else {
-          logout();
           props.signInSuccess(res.user);
         }
       })
@@ -241,7 +239,7 @@ const Login = (props) => {
   const verifyUserEmail = async () => {
     const actionCode = query.get("oobCode");
     try {
-      await checkActionCodeVerification(actionCode);
+      await applyActionCodeVerification(actionCode);
       toast({
         position: "bottom-right",
         title: Toast.EmailVerification.success.title,
