@@ -52,7 +52,7 @@ const Signup = (props) => {
   const history = useHistory();
   const toast = useToast();
   const [show, setShow] = useState(false);
-  const { registerUser, logout } = useAuth();
+  const { registerUser, logout, sendUserEmailVerification } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [checkedTermsAndCondition, setCheckedTermsAndCondition] =
     useState(false);
@@ -88,11 +88,12 @@ const Signup = (props) => {
 
   const onSubmit = async (payload) => {
     registerUser(payload.email, payload.password)
-      .then((res) => {
+      .then(async (res) => {
         const data = {
           ...res.user,
           _tokenResponse: res._tokenResponse,
         };
+        await sendUserEmailVerification();
         logout();
         localStorage.setItem(LocalStorage.WAKANDA_EMAIL, payload.email);
         props.signUpSuccess(data);

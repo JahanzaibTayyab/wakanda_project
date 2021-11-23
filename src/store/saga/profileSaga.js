@@ -4,10 +4,17 @@ import { getProfileSuccess, getProfileFailure } from "../actions/Profile";
 import { GET_USER_PROFILE, SAVE_DATA } from "../types";
 import { LocalStorage } from "../../constants/LocalStorage";
 import { db } from "../../utils/init-firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 const getUserProfile = async () => {
   const id = localStorage.getItem(LocalStorage.USER_ID);
+  const docRef = doc(db, `users/${id}`);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    return null;
+  }
 };
 function* getProfile() {
   try {

@@ -11,6 +11,9 @@ import {
   FIND_PAGE,
   FIND_PAGE_FAILURE,
   FIND_PAGE_SUCCESS,
+  EMBEDED_PIN_CODE,
+  EMBEDED_PIN_CODE_SUCCESS,
+  EMBEDED_PIN_CODE_FAILURE
 } from "../types";
 
 export const resetPreparingStates = () => ({
@@ -74,5 +77,22 @@ export const findDataBaseSuccess = (data) => ({
 
 export const findDataBaseFailure = (error) => ({
   type: FIND_DATABASE_FAILURE,
+  payload: error,
+});
+
+
+
+export const embededPinCode = (data) => ({
+  type: EMBEDED_PIN_CODE,
+  payload: data,
+});
+
+export const embededPinCodeSuccess = (data) => ({
+  type: EMBEDED_PIN_CODE_SUCCESS,
+  payload: data,
+});
+
+export const embededPinCodeFailure = (error) => ({
+  type: EMBEDED_PIN_CODE_FAILURE,
   payload: error,
 });

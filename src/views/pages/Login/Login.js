@@ -78,8 +78,15 @@ const Login = (props) => {
       }
     },
   });
-  const { signInWithGoogle, login, logout, signInWithFacebook, currentUser } =
-    useAuth();
+  const {
+    signInWithGoogle,
+    login,
+    logout,
+    signInWithFacebook,
+    checkActionCodeVerification,
+    sendUserEmailVerification,
+    currentUser,
+  } = useAuth();
 
   const [show, setShow] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
@@ -112,6 +119,15 @@ const Login = (props) => {
     if (query.get("v")) {
       setShowBanner(true);
       setEmail(localStorage.getItem(LocalStorage.WAKANDA_EMAIL));
+    }
+    if (query.get("mode") === "verifyEmail") {
+      toast({
+        position: "bottom-right",
+        title: Toast.EmailVerification.info.title,
+        duration: Toast.EmailVerification.info.duration,
+        isClosable: true,
+      });
+      verifyUserEmail();
     }
     if (query.get("oauthToken")) {
       toast({
@@ -177,8 +193,13 @@ const Login = (props) => {
     localStorage.removeItem(LocalStorage.WAKANDA_EMAIL);
   };
 
-  const handleResendEmailClick = () => {
-    props.reSendEmail({ email });
+  const handleResendEmailClick = async () => {
+    try {
+      await sendUserEmailVerification();
+      props.reSendEmailSuccess();
+    } catch (error) {
+      props.reSendEmailFailure(error.message);
+    }
   };
 
   const handleGoogleClick = () => {
@@ -200,9 +221,6 @@ const Login = (props) => {
         if (res.user.emailVerified) {
           props.signInSuccess(res.user);
           props.userData({ user: res.user, history });
-          // localStorage.setItem(LocalStorage.TOKEN, res.user.accessToken);
-          // localStorage.setItem(LocalStorage.USER_ID, res.user.uid);
-          // history.push("/app/widgets/espresso");
         } else {
           logout();
           props.signInSuccess(res.user);
@@ -218,6 +236,30 @@ const Login = (props) => {
           isClosable: true,
         });
       });
+  };
+
+  const verifyUserEmail = async () => {
+    const actionCode = query.get("oobCode");
+    try {
+      await checkActionCodeVerification(actionCode);
+      toast({
+        position: "bottom-right",
+        title: Toast.EmailVerification.success.title,
+        description: Toast.EmailVerification.success.description,
+        status: "success",
+        duration: Toast.EmailVerification.success.duration,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        position: "bottom-right",
+        title: Toast.EmailVerification.error.title,
+        description: Toast.EmailVerification.error.description,
+        status: "error",
+        duration: Toast.EmailVerification.error.duration,
+        isClosable: true,
+      });
+    }
   };
 
   return (

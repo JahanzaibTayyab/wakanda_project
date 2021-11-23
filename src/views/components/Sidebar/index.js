@@ -7,6 +7,7 @@ import {
   useColorModeValue as mode,
 } from "@chakra-ui/react";
 import { FaReact } from "react-icons/fa";
+import { connect } from "react-redux";
 import { Logo } from "../controls/DashboardLogo";
 import { MobileMenuButton } from "./MobileMenuButton";
 import NavBreadcrumb from "./NavBreadcrumb";
@@ -15,12 +16,13 @@ import { ScrollArea } from "./ScrollArea";
 import { SidebarLink } from "./SidebarLink";
 import { useMobileMenuState } from "./useMobileMenuState";
 import { UserInfo } from "./UserInfo";
-import { useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
 import { LocalStorage } from "../../../constants/LocalStorage";
+import { getProfile } from "../../../store/actions/Profile";
 
 const SideBar = (props) => {
-  const { children } = props;
+  const { children, user } = props;
   const { isOpen, toggle } = useMobileMenuState();
   const { match } = props;
   const history = useHistory();
@@ -34,6 +36,9 @@ const SideBar = (props) => {
     history.push("/login");
     window.location.reload(true);
   };
+  useEffect(() => {
+    props.getProfile();
+  }, []);
 
   return (
     <Flex
@@ -70,9 +75,9 @@ const SideBar = (props) => {
             <Logo />
             <Box as="a" href={match.url + "/profile"} cursor="pointer">
               <UserInfo
-                name={currentUser?.displayName}
+                name={user?.workspace}
                 email={currentUser?.email}
-                image={currentUser?.photoURL}
+                image={user?.workspaceIcon}
               />
             </Box>
           </Box>
@@ -179,4 +184,19 @@ const SideBar = (props) => {
     </Flex>
   );
 };
-export default SideBar;
+
+const mapStateToProps = ({ Profile }) => {
+  return {
+    user: Profile?.data,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getProfile: (data) => {
+      dispatch(getProfile(data));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SideBar);

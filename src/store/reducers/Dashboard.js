@@ -11,6 +11,9 @@ import {
   FIND_PAGE,
   FIND_PAGE_FAILURE,
   FIND_PAGE_SUCCESS,
+  EMBEDED_PIN_CODE,
+  EMBEDED_PIN_CODE_SUCCESS,
+  EMBEDED_PIN_CODE_FAILURE
 } from "../types";
 
 const INIT_STATE = {
@@ -70,6 +73,16 @@ const Dashboard = (state = INIT_STATE, action) => {
         response: action.payload,
       };
     case FIND_DATABASE_FAILURE:
+      return { ...state, loading: false, error: action.payload };
+      case EMBEDED_PIN_CODE:
+      return { ...state, loading: true };
+    case EMBEDED_PIN_CODE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        response: action.payload,
+      };
+    case EMBEDED_PIN_CODE_FAILURE:
       return { ...state, loading: false, error: action.payload };
     default:
       return { ...state };

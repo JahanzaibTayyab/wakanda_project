@@ -35,12 +35,11 @@ function* getUserDocument({ payload }) {
       getUserDocumentApi,
       payload
     );
-
     if (data) {
       if (
         data.hasOwnProperty("database") &&
         data.hasOwnProperty("workspaceIcon") &&
-        data.hasOwnProperty("workspaceName")
+        data.hasOwnProperty("workspace")
       ) {
         yield put(userDataSuccess(JSON.stringify(data)));
         localStorage.setItem(LocalStorage.TOKEN, payload.user.accessToken);
@@ -48,9 +47,9 @@ function* getUserDocument({ payload }) {
         payload.history.push("/app/widgets/espresso");
       } else {
         if (!payload.socialLogin) {
-          // localStorage.setItem(LocalStorage.TOKEN, payload.user.accessToken);
-          // localStorage.setItem(LocalStorage.USER_ID, payload.user.uid);
           if (payload.user?.emailVerified) {
+            localStorage.setItem(LocalStorage.TOKEN, payload.user.accessToken);
+            localStorage.setItem(LocalStorage.USER_ID, payload.user.uid);
             payload.history.push("/app/before");
           }
         }

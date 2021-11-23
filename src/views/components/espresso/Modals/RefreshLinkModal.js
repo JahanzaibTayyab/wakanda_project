@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, useToast } from "@chakra-ui/react";
 import Modal from "../../controls/Modal";
-import { ModalToast } from "../../../../constants/_data/Mockup";
+import { ModalToast } from "../../../../constants/Toast";
 const RefreshLinkModal = (props) => {
   const toast = useToast();
   const [buttonText, setButtonText] = useState("Refresh");

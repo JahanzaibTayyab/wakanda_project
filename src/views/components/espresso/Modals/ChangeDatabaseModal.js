@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button, useToast } from "@chakra-ui/react";
 import Modal from "../../controls/Modal";
-import { ModalToast } from "../../../../constants/_data/Mockup";
+import { ModalToast } from "../../../../constants/Toast";
 const ChangeDatabaseModal = (props) => {
   const toast = useToast();
   const [buttonText, setButtonText] = useState("Change Database");

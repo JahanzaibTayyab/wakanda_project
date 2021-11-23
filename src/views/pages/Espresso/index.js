@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Espresso from "./Espresso";
 import { notionOAuthToken } from "../../../store/actions/NotionAuth";
-import { getProfile } from "../../../store/actions/Profile";
+import { getProfile, saveData } from "../../../store/actions/Profile";
 import {
   generatePinCode,
   generateUniqueUrl,
   findDataBase,
   findPage,
+  embededPinCode,
 } from "../../../store/actions/Dashboard";
 
 const EspressoContainer = (props) => {
@@ -47,8 +48,14 @@ const mapDispatchToProps = (dispatch) => {
     findPage: (userData) => {
       dispatch(findPage(userData));
     },
-    getProfile: (userData) => {
-      dispatch(findPage(userData));
+    getProfile: (data) => {
+      dispatch(getProfile(data));
+    },
+    saveData: (data) => {
+      dispatch(saveData(data));
+    },
+    embededPinCode: (data) => {
+      dispatch(embededPinCode(data));
     },
   };
 };
