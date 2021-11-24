@@ -45,16 +45,17 @@ const DashboardContent = (props) => {
 
   useEffect(() => {
     if (initialRendering) {
-      props.findDataBase();
-      props.findPage();
+      props.findDataBase({ fromDashBoard: true });
     }
   }, []);
 
   useEffect(() => {
     if (user) {
       if (initialRendering) {
-        if (!user?.page || !user?.pinCode || !user?.uniqueUrl) {
+        if (!user?.page) {
           setShowPageError(true);
+        }
+        if (!user?.pinCode || !user?.uniqueUrl) {
           props.generateUniqueUrl();
           props.generatePinCode();
         }
@@ -132,6 +133,7 @@ const DashboardContent = (props) => {
       }
     }
     if (dashboardError) {
+      setShowLoader(false);
       setShowChangePageModal(false);
       setShowRefreshLinkModal(false);
       setDisabledEmbedWidgetButton(false);

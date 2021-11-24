@@ -52,6 +52,15 @@ function* getFindPage({ payload }) {
 
     if (data) yield put(findPageSuccess(data.data));
   } catch (error) {
+    if (payload?.fromDashBoard) {
+      toast({
+        position: "bottom-right",
+        title: error?.message,
+        description: "Error finding Page",
+        status: "error",
+        isClosable: true,
+      });
+    }
     yield put(findPageFailure(error));
   }
 }
@@ -81,9 +90,18 @@ function* getFindDataBase({ payload }) {
     );
     if (data) {
       yield put(findDataBaseSuccess(data.data));
-      yield put(findPage());
+      yield put(findPage(payload));
     }
   } catch (error) {
+    if (payload?.fromDashBoard) {
+      toast({
+        position: "bottom-right",
+        title: error?.message,
+        description: "Error finding Database",
+        status: "error",
+        isClosable: true,
+      });
+    }
     yield put(findDataBaseFailure(error));
   }
 }
@@ -167,6 +185,7 @@ function* getEmbededPinCode({ payload }) {
     }
   } catch (error) {
     toast({
+      position: "bottom-right",
       title: ModalToast.ChangePage.error.title,
       description: ModalToast.ChangePage.error.description,
       status: "error",
