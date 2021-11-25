@@ -38,21 +38,21 @@ export const OnBoardingSteps = (props) => {
   const [embedSuccess, setEmbedSuccess] = useState(false);
   const [embedError, setEmbedError] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      toast({
-        position: "bottom-right",
-        title: Toast.SocialLoginVerification.success.title,
-        description: `${Toast.SocialLoginVerification.success.description} 0 `,
-        duration: Toast.SocialLoginVerification.success.duration,
-        status: "success",
-        isClosable: true,
-      });
-      localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
-      localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
-      history.push("/app/widgets/espresso");
-    }, [3000]);
-  });
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     toast({
+  //       position: "bottom-right",
+  //       title: Toast.SocialLoginVerification.success.title,
+  //       description: `${Toast.SocialLoginVerification.success.description} 0 `,
+  //       duration: Toast.SocialLoginVerification.success.duration,
+  //       status: "success",
+  //       isClosable: true,
+  //     });
+  //     localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
+  //     localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
+  //     history.push("/app/widgets/espresso");
+  //   }, [3000]);
+  // });
   //dummy code
   // useEffect(() => {
   //   if (currentUser) {

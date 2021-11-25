@@ -157,20 +157,9 @@ export function* callGenerateUniqueUrl() {
 }
 
 const getEmbededPinCodeApi = async (payload) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve({ status: 200, pinCodeBlock: "Token verified" });
-    }, 3000);
-  });
-  // const findDataBase = httpsCallable(functions, "listdatabases");
-  // const response = await findDataBase();
-  // if (response) {
-  //   if (response.data.databases.length > 0) {
-  //     return response;
-  //   } else {
-  //     return new Error("Database has no item");
-  //   }
-  // }
+  const embedPinCode = httpsCallable(functions, "embedPinCode");
+  const response = await embedPinCode();
+  return response;
 };
 function* getEmbededPinCode({ payload }) {
   try {
