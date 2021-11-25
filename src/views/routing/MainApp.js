@@ -4,6 +4,7 @@ import { Redirect, Route, useLocation } from "react-router-dom";
 import RctDefaultLayout from "./DefaultLayout";
 import AppSignIn from "../pages/Login";
 import { LocalStorage } from "../../constants/LocalStorage";
+import { userData } from "../../store/actions/SignIn";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -27,7 +28,7 @@ const MainApp = (props) => {
       }
     }
   } else if (location.pathname === "/") {
-    return <Redirect to={"/app/widgets/espresso"} />;
+    props.userData();
   }
   const defaultPath = `${match.url}app`;
   return (
@@ -45,5 +46,12 @@ const mapStateToProps = ({ SignIn }) => {
   const { user } = SignIn;
   return { user };
 };
+const mapDispatchToProps = (dispatch) => {
+  return {
+    userData: (data) => {
+      dispatch(userData(data));
+    },
+  };
+};
 
-export default connect(mapStateToProps)(MainApp);
+export default connect(mapStateToProps, mapDispatchToProps)(MainApp);
