@@ -38,39 +38,6 @@ export const OnBoardingSteps = (props) => {
   const [embedSuccess, setEmbedSuccess] = useState(false);
   const [embedError, setEmbedError] = useState(false);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     toast({
-  //       position: "bottom-right",
-  //       title: Toast.SocialLoginVerification.success.title,
-  //       description: `${Toast.SocialLoginVerification.success.description} 0 `,
-  //       duration: Toast.SocialLoginVerification.success.duration,
-  //       status: "success",
-  //       isClosable: true,
-  //     });
-  //     localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
-  //     localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
-  //     history.push("/app/widgets/espresso");
-  //   }, [3000]);
-  // });
-  //dummy code
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     // props.notionOAuthToken({
-  //     //   code: "e9840cab-5d10-4bf3-ac70-0b1913d907e9",
-  //     //   id: currentUser?.uid,
-  //     // });
-  //     nextStep();
-  //     setTimeout(() => {
-  //       nextStep();
-  //     }, [3000]);
-  //     setTimeout(() => {
-  //       nextStep();
-  //       props.generatePinCode();
-  //     }, [8000]);
-  //   }
-  // }, [currentUser]);
-
   useEffect(() => {
     const { response, error } = props;
     if (response) {
@@ -85,7 +52,7 @@ export const OnBoardingSteps = (props) => {
         },
       });
       nextStep();
-      props.findDataBase({ id: currentUser.uid });
+      props.findDataBase({ id: currentUser?.uid });
     }
     if (error) {
       setConnentNotionError(true);
@@ -100,7 +67,7 @@ export const OnBoardingSteps = (props) => {
         setConnentDatabaseSuccess(true);
         setEmbedActive(true);
         props.saveData({
-          id: currentUser.uid,
+          id: currentUser?.uid,
           data: {
             database: databases[0]?.id,
             page: pages[0]?.id,
@@ -160,8 +127,8 @@ export const OnBoardingSteps = (props) => {
         status: "success",
         isClosable: true,
       });
-      localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
-      localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
+      localStorage.setItem(LocalStorage.TOKEN, currentUser?.accessToken);
+      localStorage.setItem(LocalStorage.USER_ID, currentUser?.uid);
       history.push("/app/widgets/espresso");
     }
   }, [uniqueLinkGenerated]);

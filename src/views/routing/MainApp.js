@@ -1,10 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, useLocation } from "react-router-dom";
+import { Redirect, Route, useLocation, useHistory } from "react-router-dom";
 import RctDefaultLayout from "./DefaultLayout";
 import AppSignIn from "../pages/Login";
 import { LocalStorage } from "../../constants/LocalStorage";
 import { userData } from "../../store/actions/SignIn";
+import { useAuth } from "../../contexts/AuthContext";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -15,7 +16,9 @@ const InitialPath = ({ component: Component, ...rest }) => (
 );
 
 const MainApp = (props) => {
+  const { currentUser } = useAuth();
   const { location, match, user } = props;
+  const history = useHistory();
   const query = useQuery();
   if (localStorage.getItem(LocalStorage.TOKEN) == null) {
     if (location.pathname !== "/login") {
@@ -28,7 +31,9 @@ const MainApp = (props) => {
       }
     }
   } else if (location.pathname === "/") {
-    props.userData();
+    if (currentUser) {
+      props.userData({ user: currentUser, history });
+    }
   }
   const defaultPath = `${match.url}app`;
   return (
