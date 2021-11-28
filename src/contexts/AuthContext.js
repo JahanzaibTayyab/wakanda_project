@@ -10,8 +10,13 @@ import {
   signOut,
   confirmPasswordReset,
   signInWithRedirect,
+  updateEmail,
+  sendEmailVerification,
+  getAuth,
+  verifyPasswordResetCode,
+  checkActionCode,
+  applyActionCode,
 } from "firebase/auth";
-
 const AuthContext = createContext({
   currentUser: null,
   signInWithGoogle: () => Promise,
@@ -22,6 +27,11 @@ const AuthContext = createContext({
   resetPassword: () => Promise,
   signInWithFacebook: () => Promise,
   verifyToken: () => Promise(),
+  updateUserEmail: () => Promise(),
+  sendUserEmailVerification: () => Promise(),
+  checkActionCodeVerification: () => Promise(),
+  verifyPasswordResetCodeVerification: () => Promise(),
+  applyActionCodeVerification: () => Promise(),
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -78,6 +88,24 @@ export default function AuthContextProvider({ children }) {
     return signInWithRedirect(auth, provider);
   }
 
+  function updateUserEmail(email) {
+    return updateEmail(auth, email);
+  }
+  function sendUserEmailVerification() {
+    const auth = getAuth();
+    return sendEmailVerification(auth.currentUser);
+  }
+
+  function checkActionCodeVerification(actionCode) {
+    return checkActionCode(auth, actionCode);
+  }
+  function verifyPasswordResetCodeVerification(actionCode) {
+    return verifyPasswordResetCode(auth, actionCode);
+  }
+  function applyActionCodeVerification(actionCode) {
+    return applyActionCode(auth, actionCode);
+  }
+
   const value = {
     currentUser,
     signInWithGoogle,
@@ -88,6 +116,11 @@ export default function AuthContextProvider({ children }) {
     resetPassword,
     verifyToken,
     signInWithFacebook,
+    updateUserEmail,
+    sendUserEmailVerification,
+    checkActionCodeVerification,
+    verifyPasswordResetCodeVerification,
+    applyActionCodeVerification,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

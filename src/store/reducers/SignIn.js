@@ -11,13 +11,21 @@ import {
   FACEBOOK_SIGN_IN,
   FACEBOOK_SIGN_IN_SUCCESS,
   FACEBOOK_SIGN_IN_FAILURE,
+  USER_DATA,
+  USER_DATA_FAILURE,
+  USER_DATA_SUCCESS,
+  VERIFY_TOKEN,
+  VERIFY_TOKEN_SUCCESS,
+  VERIFY_TOKEN_FAILURE,
 } from "../types";
 
 const INIT_STATE = {
   user: null,
   response: "",
+  error: null,
   emailSent: false,
   tokenVerified: false,
+  userHasWorkSpace: false,
   loading: false,
 };
 
@@ -39,7 +47,7 @@ const SignIn = (state = INIT_STATE, action) => {
     case SIGN_IN_FAILURE:
       return {
         ...state,
-        response: action.payload,
+        error: action.payload,
         loading: false,
       };
     case RESEND_EMAIL:
@@ -57,7 +65,7 @@ const SignIn = (state = INIT_STATE, action) => {
     case RESEND_EMAIL_FAILURE:
       return {
         ...state,
-        response: action.payload,
+        error: action.payload,
         loading: false,
       };
     case GOOGLE_SIGN_IN:
@@ -69,13 +77,12 @@ const SignIn = (state = INIT_STATE, action) => {
       return {
         ...state,
         response: action.payload,
-        tokenVerified: true,
         loading: false,
       };
     case GOOGLE_SIGN_IN_FAILURE:
       return {
         ...state,
-        response: action.payload,
+        error: action.payload,
         loading: false,
       };
     case FACEBOOK_SIGN_IN:
@@ -87,13 +94,49 @@ const SignIn = (state = INIT_STATE, action) => {
       return {
         ...state,
         response: action.payload,
-        tokenVerified: true,
         loading: false,
       };
     case FACEBOOK_SIGN_IN_FAILURE:
       return {
         ...state,
+        error: action.payload,
+        loading: false,
+      };
+    case USER_DATA:
+      return {
+        ...state,
+        loading: true,
+      };
+    case USER_DATA_SUCCESS:
+      return {
+        ...state,
         response: action.payload,
+        userHasWorkSpace: true,
+        loading: false,
+      };
+    case USER_DATA_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+    case VERIFY_TOKEN:
+      return {
+        ...state,
+        loading: true,
+      };
+    case VERIFY_TOKEN_SUCCESS:
+      return {
+        ...state,
+        response: action.payload,
+        tokenVerified: true,
+        loading: false,
+      };
+    case VERIFY_TOKEN_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        tokenVerified: false,
         loading: false,
       };
     default:

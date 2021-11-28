@@ -52,7 +52,7 @@ const Signup = (props) => {
   const history = useHistory();
   const toast = useToast();
   const [show, setShow] = useState(false);
-  const { signInWithGoogle, registerUser, logout } = useAuth();
+  const { registerUser, sendUserEmailVerification } = useAuth();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [checkedTermsAndCondition, setCheckedTermsAndCondition] =
     useState(false);
@@ -88,12 +88,12 @@ const Signup = (props) => {
 
   const onSubmit = async (payload) => {
     registerUser(payload.email, payload.password)
-      .then((res) => {
+      .then(async (res) => {
         const data = {
           ...res.user,
           _tokenResponse: res._tokenResponse,
         };
-        logout();
+        await sendUserEmailVerification();
         localStorage.setItem(LocalStorage.WAKANDA_EMAIL, payload.email);
         props.signUpSuccess(data);
         history.push({
@@ -142,7 +142,7 @@ const Signup = (props) => {
           </Heading>
           <Text mt="4" mb="8" align="center" maxW="md" fontWeight="small">
             <Text as="span">Already have an account?</Text>
-            <Link href="/login" fontWeight="bold">
+            <Link href="/sigin" fontWeight="bold">
               Sign in
             </Link>
           </Text>

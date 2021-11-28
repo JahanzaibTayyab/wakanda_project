@@ -7,6 +7,7 @@ import Preparing from "../pages/OnBoarding/Preparing";
 import MainApp from "./MainApp";
 import SignUp from "../pages/Signup";
 import ForgetPassword from "../pages/ForgetPassword";
+import ResetPassword from "../pages/ForgetPassword/ResetPasswordPage";
 
 export default function AppRouting() {
   return (
@@ -16,6 +17,9 @@ export default function AppRouting() {
           <Route path="/login">
             <Login />
           </Route>
+          <Route path="/signup">
+            <SignUp />
+          </Route>
           <Route path="/before">
             <BeforeStart />
           </Route>
@@ -24,12 +28,12 @@ export default function AppRouting() {
           </Route>
           <Route path="/onboard">
             <Preparing />
-            </Route>
-          <Route path="/signup">
-            <SignUp />
           </Route>
           <Route path="/forget-password">
             <ForgetPassword />
+          </Route>
+          <Route path="/reset-password">
+            <ResetPassword />
           </Route>
           <Route path="/" component={MainApp} />
         </Switch>

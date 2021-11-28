@@ -17,7 +17,6 @@ import {
   useToast,
   InputRightAddon,
   VisuallyHidden,
-  chakra,
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 import { useTimer } from "use-timer";
@@ -58,6 +57,7 @@ const useQuery = () => {
 };
 
 const Login = (props) => {
+  const { userHasWorkSpace } = props;
   const location = useLocation();
   const query = useQuery();
   const history = useHistory();
@@ -67,25 +67,32 @@ const Login = (props) => {
     endTime: 5,
     initialTime: 1,
     onTimeOver: () => {
-      localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
-      localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
-      history.push("/app/widgets/espresso");
+      if (userHasWorkSpace) {
+        localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
+        localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
+        history.push("/app/widgets/espresso");
+      } else {
+        localStorage.setItem(LocalStorage.TOKEN, currentUser.accessToken);
+        localStorage.setItem(LocalStorage.USER_ID, currentUser.uid);
+        history.push("/before");
+      }
     },
   });
   const {
     signInWithGoogle,
     login,
     logout,
-    verifyToken,
     signInWithFacebook,
+    applyActionCodeVerification,
+    sendUserEmailVerification,
     currentUser,
   } = useAuth();
-
   const [show, setShow] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [email, setEmail] = useState("");
   const [disabledForm, setDisabledForm] = useState(false);
   const [isGoogleLogin, setIsGoogleLogin] = useState(false);
+  const [socialLogin, setSocialLogin] = useState(false);
 
   useEffect(() => {
     getRedirectResult(auth)
@@ -112,6 +119,15 @@ const Login = (props) => {
       setShowBanner(true);
       setEmail(localStorage.getItem(LocalStorage.WAKANDA_EMAIL));
     }
+    if (query.get("mode") === "verifyEmail") {
+      toast({
+        position: "bottom-right",
+        title: Toast.EmailVerification.info.title,
+        duration: Toast.EmailVerification.info.duration,
+        isClosable: true,
+      });
+      verifyUserEmail();
+    }
     if (query.get("oauthToken")) {
       toast({
         position: "bottom-right",
@@ -120,16 +136,12 @@ const Login = (props) => {
         isClosable: true,
       });
       setDisabledForm(true);
-      verifyToken(query.get("oauthToken")).then((res) => {
-        start();
-        toast({
-          position: "bottom-right",
-          title: Toast.SocialLoginVerification.success.title,
-          description: `${Toast.SocialLoginVerification.success.description} ${time} `,
-          duration: Toast.SocialLoginVerification.success.duration,
-          status: "success",
-          isClosable: true,
-        });
+      setSocialLogin(true);
+      props.verifyToken({
+        token: query.get("oauthToken"),
+        socialLogin: true,
+        user: currentUser,
+        history,
       });
     }
   }, [location]);
@@ -143,6 +155,24 @@ const Login = (props) => {
       }
     }
   }, [props.user]);
+
+  useEffect(() => {
+    const { tokenVerified } = props;
+    if (socialLogin) {
+      if (tokenVerified) {
+        setSocialLogin(false);
+        start();
+        toast({
+          position: "bottom-right",
+          title: Toast.SocialLoginVerification.success.title,
+          description: `${Toast.SocialLoginVerification.success.description} ${time} `,
+          duration: Toast.SocialLoginVerification.success.duration,
+          status: "success",
+          isClosable: true,
+        });
+      }
+    }
+  }, [props.user, props.userHasWorkSpace, props.tokenVerified]);
 
   const {
     register,
@@ -162,16 +192,23 @@ const Login = (props) => {
     localStorage.removeItem(LocalStorage.WAKANDA_EMAIL);
   };
 
-  const handleResendEmailClick = () => {
-    props.reSendEmail({ email });
+  const handleResendEmailClick = async () => {
+    try {
+      await sendUserEmailVerification();
+      props.reSendEmailSuccess();
+    } catch (error) {
+      props.reSendEmailFailure(error.message);
+    }
   };
 
   const handleGoogleClick = () => {
+    setSocialLogin(true);
     setIsGoogleLogin(true);
     signInWithGoogle();
   };
 
   const handleFaceBookClick = () => {
+    setSocialLogin(true);
     setIsGoogleLogin(false);
     signInWithFacebook();
   };
@@ -181,12 +218,11 @@ const Login = (props) => {
     login(payload.email, payload.password)
       .then((res) => {
         if (res.user.emailVerified) {
-          localStorage.setItem(LocalStorage.TOKEN, res.user.accessToken);
-          localStorage.setItem(LocalStorage.USER_ID, res.user.uid);
-          history.push("/app/widgets/espresso");
+          props.signInSuccess(res.user);
+          props.userData({ user: res.user, history });
+        } else {
+          props.signInSuccess(res.user);
         }
-        logout();
-        props.signInSuccess(res.user);
       })
       .catch((error) => {
         props.signInFailure(error.message);
@@ -198,6 +234,30 @@ const Login = (props) => {
           isClosable: true,
         });
       });
+  };
+
+  const verifyUserEmail = async () => {
+    const actionCode = query.get("oobCode");
+    try {
+      await applyActionCodeVerification(actionCode);
+      toast({
+        position: "bottom-right",
+        title: Toast.EmailVerification.success.title,
+        description: Toast.EmailVerification.success.description,
+        status: "success",
+        duration: Toast.EmailVerification.success.duration,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        position: "bottom-right",
+        title: Toast.EmailVerification.error.title,
+        description: Toast.EmailVerification.error.description,
+        status: "error",
+        duration: Toast.EmailVerification.error.duration,
+        isClosable: true,
+      });
+    }
   };
 
   return (

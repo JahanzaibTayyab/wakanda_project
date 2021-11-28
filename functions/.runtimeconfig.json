@@ -1,0 +1,18 @@
+{
+  "notion": {
+    "auth": {
+      "authorize_host": "https://api.notion.com",
+      "authorize_path": "/v1/oauth/authorize",
+      "token_host": "https://api.notion.com",
+      "token_path": "v1/oauth/token"
+    },
+    "client": {
+      "secret": "secret_teXWe1eiAFLm8dlAWcUI75vxeikPZd1ZkB0NpAfTyV3",
+      "id": "2bc4e06e-c887-4c1e-8e5f-217beba1359e"
+    },
+    "demo": {
+      "database": "7a2ec067-59d8-4e8b-a189-63895e9668ad",
+      "token": "secret_UVWihdrzxdw8uw7t6O8nR14pkhuggLUR49e1oBGHuow"
+    }
+  }
+}
