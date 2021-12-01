@@ -43,12 +43,17 @@ const ForgetPassword = (props) => {
     reset();
     try {
       await forgotPassword(payload.email);
+      toast({
+        position: "bottom-right",
+        description: `An email is sent to ${payload.email} for password reset instructions.`,
+        status: "success",
+        isClosable: true,
+      });
       history.push({
         pathname: "/login",
         state: { forgetPassword: "fromForgetPassword", email: payload.email },
       });
     } catch (error) {
-      console.log(error.message);
       toast({
         position: "bottom-right",
         description: error.message,
