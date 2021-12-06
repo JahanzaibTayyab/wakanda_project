@@ -4,10 +4,10 @@
       "authorize_host": "https://api.notion.com",
       "authorize_path": "/v1/oauth/authorize",
       "token_host": "https://api.notion.com",
-      "token_path": "v1/oauth/token"
+      "token_path": "/v1/oauth/token"
     },
     "client": {
-      "secret": "secret_teXWe1eiAFLm8dlAWcUI75vxeikPZd1ZkB0NpAfTyV3",
+      "secret": "secret_nOJ60GFGwNpzApK7SHO4BilBlQJS8MUTCZ7vG3pbUyV",
       "id": "2bc4e06e-c887-4c1e-8e5f-217beba1359e"
     },
     "demo": {

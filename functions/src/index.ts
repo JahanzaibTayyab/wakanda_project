@@ -27,11 +27,10 @@ delete notionOauthConfig.auth.authorize_host;
 delete notionOauthConfig.auth.token_path;
 delete notionOauthConfig.auth.token_host;
 
-
 // const redirectUrl = process.env.FUNCTIONS_EMULATOR?
-// const redirectUrl = "http://localhost:3005/onboard";
+const redirectUrl = "http://localhost:3005/onboard";
 // const redirectUrl = "https://app.notion.coffee/notion";
-const redirectUrl = "https://react-coffee-a2736.web.app/onboard";
+// const redirectUrl = "https://react-coffee-a2736.web.app/onboard";
 
 const notionOauth = new ClientOAuth2({
   clientId: notionOauthConfig.client.id,
@@ -39,8 +38,7 @@ const notionOauth = new ClientOAuth2({
   accessTokenUri:
     notionOauthConfig.auth.tokenHost + notionOauthConfig.auth.tokenPath,
   authorizationUri:
-    notionOauthConfig.auth.authorizeHost +
-    notionOauthConfig.auth.authorizePath,
+    notionOauthConfig.auth.authorizeHost + notionOauthConfig.auth.authorizePath,
   redirectUri: redirectUrl,
   scopes: [],
 });
@@ -50,16 +48,20 @@ functions.logger.info("notion oauth", notionOauth);
 export const oauthUrl = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
-      functions.logger.info("start with context"+context);
+      functions.logger.info("start with context" + context);
       const uid = context.auth?.uid;
       if (uid) {
         try {
-          functions.logger.info("inside try with uid: "+uid);
-          const authorizationUri = notionOauth.code.getUri({state: "A"});
+          functions.logger.info("inside try with uid: " + uid);
+          const authorizationUri = notionOauth.code.getUri(
+              {
+                state: "A", query: {owner: "user"},
+              }
+          );
           functions.logger.info(authorizationUri);
           return {redirectUrl: authorizationUri};
         } catch (e) {
-          functions.logger.error("An internal error"+e);
+          functions.logger.error("An internal error" + e);
           throw new functions.https.HttpsError("internal", e);
         }
       } else {
@@ -71,44 +73,51 @@ export const oauthToken = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
-      if (uid) {
-        const code: string = data.code as string;
-        return notionOauth.code
-            .getToken(redirectUrl + "?code=" + code + "&state=A", {
-              body: {
-                code: code,
-                redirect_uri: redirectUrl,
-                grant_type: "authorization_code",
-              },
-              state: "A",
-            })
-            .then((token:any) => {
-              const userRef = db.collection("notionAuth").doc(uid);
-              userRef.get().then((d:any) => d.exists);
-              return userRef
-                  .set(token.data)
-                  .then(() => {
-                    return {
-                      success: true,
-                      workspaceIcon: token.data.workspace_icon,
-                      workspace: token.data.workspace_name,
-                    };
-                  })
-                  .catch((error: any) => {
-                    functions.logger.error("Access Token Error\n", error);
-                    throw new functions.https.HttpsError("internal", error);
-                  });
-            })
-            .catch((error:any) => {
-              functions.logger.error("Code get Token Error\n", error);
-              throw new functions.https.HttpsError("internal", error);
-            });
-      } else {
+      if (!uid) {
         throw new functions.https.HttpsError(
             "unauthenticated",
             "Not authenticated"
         );
       }
+      const code: string = data.code as string;
+      if (!code) {
+        throw new functions.https.HttpsError(
+            "failed-precondition",
+            "No code in request body"
+        );
+      }
+      const fullUrl = redirectUrl + "?code=" + code + "&state=A" +
+        "&owner=user";
+      return notionOauth.code
+          .getToken(fullUrl, {
+            body: {
+              code: code,
+              redirect_uri: redirectUrl,
+              grant_type: "authorization_code",
+            },
+            state: "A",
+          })
+          .then((token: any) => {
+            const userRef = db.collection("notionAuth").doc(uid);
+            userRef.get().then((d: any) => d.exists);
+            return userRef
+                .set(token.data)
+                .then(() => {
+                  return {
+                    success: true,
+                    workspaceIcon: token.data.workspace_icon,
+                    workspace: token.data.workspace_name,
+                  };
+                })
+                .catch((error: any) => {
+                  functions.logger.error("Access Token Error\n", error);
+                  throw new functions.https.HttpsError("internal", error);
+                });
+          })
+          .catch((error: any) => {
+            functions.logger.error("Code get Token Error\n", error);
+            throw new functions.https.HttpsError("internal", error);
+          });
     });
 
 export const listpages = functions
@@ -344,7 +353,7 @@ export const saveSingleTask = functions
                   .collection("users")
                   .doc(uid)
                   .get()
-                  .then((user:any) => {
+                  .then((user: any) => {
                     const userData = user.data();
                     const notion = new Client({
                       auth: docData?.accessToken,
