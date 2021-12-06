@@ -8,7 +8,6 @@ export const BannerLink = (props) => (
     py="1"
     textAlign="center"
     backgroundColor="white"
-    textColor="blue.500"
     borderWidth="1px"
     borderColor="whiteAlpha.400"
     rounded="base"

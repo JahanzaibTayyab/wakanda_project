@@ -26,6 +26,7 @@ const LoginContainer = (props) => {
 const mapStateToProps = ({ SignUp, SignIn }) => {
   return {
     emailSent: SignIn?.emailSent,
+    error: SignIn?.error,
     signInResponse: SignIn?.response,
     user: SignIn?.user,
     loading: SignIn?.loading,

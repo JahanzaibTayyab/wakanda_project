@@ -58,6 +58,7 @@ const Signup = (props) => {
     useState(false);
   const [checkedPrivacyPolicy, setCheckedPrivacyPolicy] = useState(false);
   const [emailAlreadyTaken, setEmailAlreadyTaken] = useState(false);
+  const [disabledForm, setDisabledForm] = useState(false);
 
   useEffect(() => {
     const { emailAlreadyTaken } = props;
@@ -87,6 +88,7 @@ const Signup = (props) => {
   const handleClick = () => setShow(!show);
 
   const onSubmit = async (payload) => {
+    setDisabledForm(true);
     registerUser(payload.email, payload.password)
       .then(async (res) => {
         const data = {
@@ -96,12 +98,14 @@ const Signup = (props) => {
         await sendUserEmailVerification();
         localStorage.setItem(LocalStorage.WAKANDA_EMAIL, payload.email);
         props.signUpSuccess(data);
+        setDisabledForm(false);
         history.push({
           pathname: "/login",
           search: "?v=true",
         });
       })
       .catch((error) => {
+        setDisabledForm(false);
         if (error.message.includes("email-already-in-use")) {
           props.getAlreadyEmail(true);
         } else {
@@ -152,6 +156,7 @@ const Signup = (props) => {
                 isInvalid={!!errors?.email?.message || emailAlreadyTaken}
                 errortext={errors?.email?.message}
                 isRequired
+                isDisabled={disabledForm}
               >
                 <FormLabel>Email</FormLabel>
                 <Input
@@ -174,6 +179,7 @@ const Signup = (props) => {
                 isInvalid={!!errors?.password?.message}
                 errortext={errors?.password?.message}
                 isRequired
+                isDisabled={disabledForm}
               >
                 <Flex justify="space-between">
                   <FormLabel>Password</FormLabel>
@@ -195,6 +201,7 @@ const Signup = (props) => {
                 isInvalid={!!errors?.confirmPassword?.message}
                 errortext={errors?.confirmPassword?.message}
                 isRequired
+                isDisabled={disabledForm}
               >
                 <Flex justify="space-between">
                   <FormLabel>Confirm Password</FormLabel>
@@ -222,6 +229,7 @@ const Signup = (props) => {
                     setCheckedTermsAndCondition(e.target.checked)
                   }
                   fontSize="sm"
+                  isDisabled={disabledForm}
                 >
                   I read and accept the
                   <Link>
@@ -235,6 +243,7 @@ const Signup = (props) => {
                   marginTop="1"
                   fontSize="sm"
                   value={checkedPrivacyPolicy}
+                  isDisabled={disabledForm}
                   onChange={(e) => setCheckedPrivacyPolicy(e.target.checked)}
                 >
                   I read and accept the
@@ -248,7 +257,7 @@ const Signup = (props) => {
               </FormControl>
               <Button
                 type="submit"
-                colorScheme="teal"
+                colorScheme="yellow"
                 size="lg"
                 fontSize="md"
                 onClick={handleSubmit(onSubmit)}
@@ -257,7 +266,8 @@ const Signup = (props) => {
                   !!errors.password ||
                   !!errors.confirmPassword ||
                   !checkedTermsAndCondition ||
-                  !checkedPrivacyPolicy
+                  !checkedPrivacyPolicy ||
+                  disabledForm
                 }
               >
                 Sign Up
@@ -284,6 +294,7 @@ const Signup = (props) => {
               <Button
                 color="currentColor"
                 variant="outline"
+                isDisabled={disabledForm}
                 onClick={handleFaceBookClick}
               >
                 <VisuallyHidden>Login with Facebook</VisuallyHidden>
@@ -292,6 +303,7 @@ const Signup = (props) => {
               <Button
                 color="currentColor"
                 variant="outline"
+                isDisabled={disabledForm}
                 onClick={handleGoogleClick}
               >
                 <VisuallyHidden>Login with Google</VisuallyHidden>

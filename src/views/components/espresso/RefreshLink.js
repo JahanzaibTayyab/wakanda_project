@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Input,
   InputGroup,
   InputLeftAddon,
   IconButton,
+  useClipboard,
+  useToast,
 } from "@chakra-ui/react";
 const RefreshLink = (props) => {
+  const toast = useToast();
   const { icon, inputValue, ...rest } = props;
+  const { hasCopied, onCopy } = useClipboard(inputValue);
+  useEffect(() => {
+    if (hasCopied) {
+      toast({
+        position: "bottom-right",
+        title: "Link Copied",
+        status: "success",
+        isClosable: true,
+      });
+    }
+  }, [hasCopied]);
   return (
     <>
       <InputGroup
@@ -28,8 +42,10 @@ const RefreshLink = (props) => {
           type="text"
           value={inputValue}
           isReadOnly
+          color="blackAlpha.500"
           {...rest}
           fontSize="sm"
+          onClick={onCopy}
         />
       </InputGroup>
     </>

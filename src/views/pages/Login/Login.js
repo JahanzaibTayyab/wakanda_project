@@ -198,6 +198,14 @@ const Login = (props) => {
       props.reSendEmailSuccess();
     } catch (error) {
       props.reSendEmailFailure(error.message);
+      toast({
+        position: "bottom-right",
+        title: "Resend Email",
+        description: error.message,
+        status: "error",
+        duration: Toast.EmailVerification.error.duration,
+        isClosable: true,
+      });
     }
   };
 
@@ -215,8 +223,10 @@ const Login = (props) => {
 
   const onSubmit = async (payload) => {
     reset();
+    setDisabledForm(true);
     login(payload.email, payload.password)
       .then((res) => {
+        setDisabledForm(false);
         if (res.user.emailVerified) {
           props.signInSuccess(res.user);
           props.userData({ user: res.user, history });
@@ -225,6 +235,7 @@ const Login = (props) => {
         }
       })
       .catch((error) => {
+        setDisabledForm(false);
         props.signInFailure(error.message);
         toast({
           position: "bottom-right",
@@ -328,7 +339,7 @@ const Login = (props) => {
               </FormControl>
               <Button
                 type="submit"
-                colorScheme="teal"
+                colorScheme="yellow"
                 size="lg"
                 fontSize="md"
                 onClick={handleSubmit(onSubmit)}

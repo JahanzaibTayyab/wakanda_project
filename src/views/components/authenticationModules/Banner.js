@@ -25,6 +25,17 @@ const Banner = (props) => {
     }
   }, [props.emailSent]);
 
+  useEffect(() => {
+    const { error } = props;
+    if (error) {
+      setButtonText("Error Sent Email!");
+      setTimeout(() => {
+        setButtonText("Resend email");
+        props.resetSignInStates();
+      }, [3000]);
+    }
+  }, [props.error]);
+
   const handleResendEmailLink = () => {
     setButtonText("Resending...");
     handleResendEmailClick();
@@ -53,6 +64,7 @@ const Banner = (props) => {
             base: "full",
             sm: "auto",
           }}
+          textColor={props?.error ? "red" : "blue.500"}
           fontWeight={buttonText === "Email Sent!" ? "bold" : "normal"}
           flexShrink={0}
           onClick={handleResendEmailLink}

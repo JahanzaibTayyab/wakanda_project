@@ -82,7 +82,8 @@ const DashboardContent = (props) => {
 
   useEffect(() => {
     if (initialRendering) {
-      if (databases && pages) {
+      if (databases && pages && user) {
+        setEnabledSwitch(user?.urlEnabled);
         setInitialRendering(false);
         setShowLoader(false);
       }
@@ -150,6 +151,10 @@ const DashboardContent = (props) => {
 
   const handelSwitchClick = (e) => {
     setEnabledSwitch(!enableSwitch);
+    props.saveData({
+      id: currentUser?.uid,
+      data: { urlEnabled: !enableSwitch },
+    });
   };
 
   const handleEmbedWidgetClick = () => {
@@ -284,7 +289,6 @@ const DashboardContent = (props) => {
               <Box>
                 <RefreshLink
                   icon={props.refreshIcon}
-                  disabled
                   inputValue={user?.uniqueUrl}
                 />
                 <Flex justify="flex-end">
@@ -306,6 +310,7 @@ const DashboardContent = (props) => {
                     size="sm"
                     colorScheme="yellow"
                     value={enableSwitch}
+                    isChecked={enableSwitch}
                     onChange={handelSwitchClick}
                   />
                   <Text ml={5} fontSize="xs" textAlign="center">

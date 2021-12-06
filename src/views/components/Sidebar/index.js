@@ -118,20 +118,10 @@ const SideBar = (props) => {
                     Machiatto
                   </SidebarLink>
                 </Stack>
-                <Stack pb="6">
-                  <NavSectionTitle>Configuration</NavSectionTitle>
-                  <SidebarLink
-                    icon={<FaReact />}
-                    href={match.url + "/configuration/theme"}
-                  >
-                    Theme
-                  </SidebarLink>
-                </Stack>
               </div>
               <Flex direction="column">
                 <Divider mb={5} />
                 <Stack pb="6">
-                  <SidebarLink icon={<FaReact />}>Support</SidebarLink>
                   <SidebarLink icon={<FaReact />} onClick={logoutUser}>
                     Logout
                   </SidebarLink>

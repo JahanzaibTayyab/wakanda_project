@@ -74,6 +74,7 @@ export const OnBoardingSteps = (props) => {
           },
         });
         nextStep();
+        props.generatePinCode();
       }
       if (dashboardError) {
         setConnentDatabaseError(true);
@@ -113,6 +114,7 @@ export const OnBoardingSteps = (props) => {
           id: currentUser?.uid,
           data: {
             uniqueUrl: dashboardResponse,
+            urlEnabled: true,
           },
         });
       }
