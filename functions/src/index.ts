@@ -28,9 +28,9 @@ delete notionOauthConfig.auth.token_path;
 delete notionOauthConfig.auth.token_host;
 
 // const redirectUrl = process.env.FUNCTIONS_EMULATOR?
-const redirectUrl = "http://localhost:3005/onboard";
+// const redirectUrl = "http://localhost:3005/onboard";
 // const redirectUrl = "https://app.notion.coffee/notion";
-// const redirectUrl = "https://react-coffee-a2736.web.app/onboard";
+const redirectUrl = "https://react-coffee-a2736.web.app/onboard";
 
 const notionOauth = new ClientOAuth2({
   clientId: notionOauthConfig.client.id,
