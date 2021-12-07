@@ -42,7 +42,7 @@ const Banner = (props) => {
   };
 
   return (
-    <Box as="section">
+    <Box position="fixed" bottom={0} width="100%">
       <Stack
         direction={{ base: "column", sm: "row" }}
         justifyContent="center"

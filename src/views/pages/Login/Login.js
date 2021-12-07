@@ -81,7 +81,6 @@ const Login = (props) => {
   const {
     signInWithGoogle,
     login,
-    logout,
     signInWithFacebook,
     applyActionCodeVerification,
     sendUserEmailVerification,
