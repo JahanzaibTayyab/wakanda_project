@@ -272,7 +272,7 @@ function Widget() {
           </Form>
         )}
       </Formik>
-      <Button size="xs" onClick={logout} colorScheme='teal' variant='outline'>
+      <Button size="xs" onClick={logout} colorScheme='yellow' variant='outline'>
         logout
       </Button>
     </>

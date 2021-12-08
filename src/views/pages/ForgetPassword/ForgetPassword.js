@@ -106,7 +106,7 @@ const ForgetPassword = (props) => {
               </FormControl>
               <Button
                 type="submit"
-                colorScheme="teal"
+                colorScheme="yellow"
                 size="lg"
                 fontSize="md"
                 onClick={handleSubmit(onSubmit)}

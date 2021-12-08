@@ -48,7 +48,7 @@ const EmbedInNotionModal = (props) => {
         </>
       }
     >
-      Your current widget embed will be replaced with this new URL.
+      Your current Pin code will be replaced with a new code.
     </Modal>
   );
 };

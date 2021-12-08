@@ -63,7 +63,7 @@ const BeforeStart = (props) => {
           <Flex justify="center" mb="2">
             <Button
               type="submit"
-              colorScheme="teal"
+              colorScheme="yellow"
               size="md"
               fontSize="sm"
               onClick={handelClick}
@@ -73,8 +73,9 @@ const BeforeStart = (props) => {
           </Flex>
 
           <Image
-            src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/beforeStart.png?alt=media&token=222495a4-3651-4440-a9cf-3941fb08959a"
+            src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/beforeStart.gif?alt=media&token=f466e9a9-0c7c-421e-b055-a6fed3814e37"
             alt="Img"
+            boxShadow="dark-lg"
           />
         </Box>
       </Box>

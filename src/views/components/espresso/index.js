@@ -364,9 +364,7 @@ const DashboardContent = (props) => {
                   }}
                   mr={10}
                 >
-                  This is the page where the widget will be embedded. we will
-                  not remove anything from this page, only add the widget and
-                  the security authentication code.
+                  This is the page where the PIN code will be embedded. we will not remove anything from this page, only add the security authentication code.
                 </Text>
               </Box>
               <Box>
@@ -416,7 +414,7 @@ const DashboardContent = (props) => {
                     leftIcon={props.refreshIcon}
                     onClick={handleEmbedWidgetClick}
                   >
-                    Embed Widget
+                    Embed Code
                   </Button>
                 </Flex>
               </Box>
