@@ -7,6 +7,7 @@ import {
   onAuthStateChanged,
   FacebookAuthProvider,
   GoogleAuthProvider,
+  EmailAuthProvider,
   signOut,
   confirmPasswordReset,
   signInWithRedirect,
@@ -16,6 +17,7 @@ import {
   verifyPasswordResetCode,
   checkActionCode,
   applyActionCode,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 const AuthContext = createContext({
   currentUser: null,
@@ -32,6 +34,8 @@ const AuthContext = createContext({
   checkActionCodeVerification: () => Promise(),
   verifyPasswordResetCodeVerification: () => Promise(),
   applyActionCodeVerification: () => Promise(),
+  reauthenticateUser: () => Promise(),
+  reauthenticate: () => Promise(),
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -89,7 +93,8 @@ export default function AuthContextProvider({ children }) {
   }
 
   function updateUserEmail(email) {
-    return updateEmail(auth, email);
+    const auth = getAuth();
+    return updateEmail(auth.currentUser, email);
   }
   function sendUserEmailVerification() {
     const auth = getAuth();
@@ -105,6 +110,16 @@ export default function AuthContextProvider({ children }) {
   function applyActionCodeVerification(actionCode) {
     return applyActionCode(auth, actionCode);
   }
+  function reauthenticateUser(credential) {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    return reauthenticateWithCredential(user, credential);
+  }
+  function reauthenticate(currentPassword) {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    return EmailAuthProvider.credential(user.email, currentPassword);
+  }
 
   const value = {
     currentUser,
@@ -117,10 +132,12 @@ export default function AuthContextProvider({ children }) {
     verifyToken,
     signInWithFacebook,
     updateUserEmail,
+    reauthenticate,
     sendUserEmailVerification,
     checkActionCodeVerification,
     verifyPasswordResetCodeVerification,
     applyActionCodeVerification,
+    reauthenticateUser,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

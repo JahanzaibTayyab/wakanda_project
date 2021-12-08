@@ -21,7 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useHistory } from "react-router-dom";
 import Loader from "../../components/controls/Loader";
 import { useAuth } from "../../../contexts/AuthContext";
-import { LocalStorage } from "../../../constants/LocalStorage";
+import ReauthenticateModal from "./reauthenticateModal";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -38,6 +38,7 @@ const Profile = (props) => {
   const [showButtonContainer, setShowButtonContainer] = useState(false);
   const [initialValue, setInitialValue] = useState({});
   const [disabledForm, setDisabledForm] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -77,26 +78,53 @@ const Profile = (props) => {
       if (values.name) {
         const isEqual = _.isEqual(values.name.trim(), initialValue.name);
         if (!isEqual) {
-          console.log("Called Name");
           props.saveData({
             id: currentUser?.uid,
             data: {
               workspace: values.name.trim(),
             },
           });
+          toast({
+            position: "bottom-right",
+            title: "Name updated Successfully",
+            status: "success",
+            isClosable: true,
+          });
+          setShowButtonContainer(false);
         }
       }
       if (values.email) {
         const isEqual = _.isEqual(values.email.trim(), initialValue.email);
         if (!isEqual) {
-          await updateUserEmail(values.email);
-          await sendUserEmailVerification();
-          logout();
-          localStorage.removeItem(LocalStorage.TOKEN);
-          localStorage.removeItem(LocalStorage.USER_ID);
-          localStorage.removeItem(LocalStorage.WAKANDA_EMAIL);
-          history.push("/login");
-          window.location.reload(true);
+          try {
+            await updateUserEmail(values.email);
+            try {
+              await sendUserEmailVerification();
+              logout();
+              localStorage.clear();
+              history.push("/login");
+              window.location.reload(true);
+            } catch (error) {
+              toast({
+                position: "bottom-right",
+                description: error.message,
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+              });
+            }
+          } catch (error) {
+            if (error.message.includes("auth/requires-recent-login")) {
+              setShowModal(true);
+            }
+            toast({
+              position: "bottom-right",
+              description: error.message,
+              status: "error",
+              duration: 9000,
+              isClosable: true,
+            });
+          }
         }
       }
       props.getProfile();
@@ -208,6 +236,10 @@ const Profile = (props) => {
           </SimpleGrid>
         </>
       )}
+      <ReauthenticateModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+      />
     </>
   );
 };

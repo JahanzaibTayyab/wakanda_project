@@ -257,7 +257,8 @@ const Signup = (props) => {
               </FormControl>
               <Button
                 type="submit"
-                colorScheme="yellow"
+                bg="yellow.600"
+                textColor="white"
                 size="lg"
                 fontSize="md"
                 onClick={handleSubmit(onSubmit)}

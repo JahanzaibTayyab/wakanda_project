@@ -35,6 +35,7 @@ const RefreshLink = (props) => {
               bg="transparent !important"
               variant="ghost"
               icon={icon}
+              onClick={onCopy}
             />
           }
         />
@@ -45,7 +46,6 @@ const RefreshLink = (props) => {
           color="blackAlpha.500"
           {...rest}
           fontSize="sm"
-          onClick={onCopy}
         />
       </InputGroup>
     </>

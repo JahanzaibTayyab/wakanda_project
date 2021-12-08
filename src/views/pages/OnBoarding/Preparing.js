@@ -9,12 +9,15 @@ import {
 } from "../../../store/actions/NotionAuth";
 import { resetSignInStates } from "../../../store/actions/SignIn";
 import {
-  resetPreparingStates,
+  resetEmbeddedLinkStates,
   generatePinCode,
   generateUniqueUrl,
+} from "../../../store/actions/EmbeddedLink.js";
+import {
   findDataBase,
-  findPage,
-} from "../../../store/actions/Dashboard";
+  resetTaskDataBaseStates,
+} from "../../../store/actions/TaskDatabase";
+import { findPage, resetPagesStates } from "../../../store/actions/Pages";
 import { saveData } from "../../../store/actions/Profile";
 
 const Preparing = (props) => {
@@ -60,18 +63,22 @@ const Preparing = (props) => {
   );
 };
 
-const mapStateToProps = ({ NotionAuth, Dashboard }) => {
+const mapStateToProps = ({ NotionAuth, EmbeddedLink, Pages, TaskDatabase }) => {
   return {
     loading: NotionAuth?.loading,
     redirectedUrl: NotionAuth?.oauthUrl?.redirectUrl,
     response: NotionAuth?.response,
     error: NotionAuth?.error,
-    uniqueLinkGenerated: Dashboard?.uniqueLinkGenerated,
-    pinCodeGenerated: Dashboard?.pinCodeGenerated,
-    dashboardError: Dashboard?.error,
-    dashboardResponse: Dashboard?.response,
-    databases: Dashboard?.databases,
-    pages: Dashboard?.pages,
+    uniqueLinkGenerated: EmbeddedLink?.uniqueLinkGenerated,
+    pinCodeGenerated: EmbeddedLink?.pinCodeGenerated,
+    embeddedLinkError: EmbeddedLink?.error,
+    embeddedLinkResponse: EmbeddedLink?.response,
+    databases: TaskDatabase?.databases,
+    taskDatabaseError: TaskDatabase?.error,
+    taskDatabaseResponse: TaskDatabase?.response,
+    pages: Pages?.pages,
+    pagesError: Pages?.error,
+    pagesResponse: Pages?.response,
   };
 };
 
@@ -101,8 +108,14 @@ const mapDispatchToProps = (dispatch) => {
     resetSignInStates: (data) => {
       dispatch(resetSignInStates(data));
     },
-    resetPreparingStates: (data) => {
-      dispatch(resetPreparingStates(data));
+    resetEmbeddedLinkStates: (data) => {
+      dispatch(resetEmbeddedLinkStates(data));
+    },
+    resetTaskDataBaseStates: (data) => {
+      dispatch(resetTaskDataBaseStates(data));
+    },
+    resetPagesStates: (data) => {
+      dispatch(resetPagesStates(data));
     },
   };
 };

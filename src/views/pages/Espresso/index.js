@@ -6,27 +6,36 @@ import { getProfile, saveData } from "../../../store/actions/Profile";
 import {
   generatePinCode,
   generateUniqueUrl,
-  findDataBase,
-  findPage,
-  embededPinCode,
-} from "../../../store/actions/Dashboard";
+} from "../../../store/actions/EmbeddedLink.js";
+import { findPage, embeddedPinCode } from "../../../store/actions/Pages";
+import { findDataBase } from "../../../store/actions/TaskDatabase";
 
 const EspressoContainer = (props) => {
   return <Espresso {...props} />;
 };
 
-const mapStateToProps = ({ NotionAuth, Dashboard, Profile }) => {
+const mapStateToProps = ({
+  NotionAuth,
+  EmbeddedLink,
+  Pages,
+  TaskDatabase,
+  Profile,
+}) => {
   return {
     loading: NotionAuth?.loading,
     redirectedUrl: NotionAuth?.oauthUrl?.redirectUrl,
     response: NotionAuth?.response,
     error: NotionAuth?.error,
-    uniqueLinkGenerated: Dashboard?.uniqueLinkGenerated,
-    pinCodeGenerated: Dashboard?.pinCodeGenerated,
-    dashboardError: Dashboard?.error,
-    dashboardResponse: Dashboard?.response,
-    databases: Dashboard?.databases,
-    pages: Dashboard?.pages,
+    uniqueLinkGenerated: EmbeddedLink?.uniqueLinkGenerated,
+    pinCodeGenerated: EmbeddedLink?.pinCodeGenerated,
+    embeddedLinkError: EmbeddedLink?.error,
+    embeddedLinkResponse: EmbeddedLink?.response,
+    databases: TaskDatabase?.databases,
+    taskDatabaseError: TaskDatabase?.error,
+    taskDatabaseResponse: TaskDatabase?.response,
+    pages: Pages?.pages,
+    pagesError: Pages?.error,
+    pagesResponse: Pages?.response,
     user: Profile?.data,
   };
 };
@@ -54,8 +63,8 @@ const mapDispatchToProps = (dispatch) => {
     saveData: (data) => {
       dispatch(saveData(data));
     },
-    embededPinCode: (data) => {
-      dispatch(embededPinCode(data));
+    embeddedPinCode: (data) => {
+      dispatch(embeddedPinCode(data));
     },
   };
 };

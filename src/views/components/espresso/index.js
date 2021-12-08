@@ -45,7 +45,7 @@ const DashboardContent = (props) => {
 
   useEffect(() => {
     if (initialRendering) {
-      props.findDataBase({ fromDashBoard: true });
+      props.findDataBase({ fromDashboard: true });
     }
   }, []);
 
@@ -56,19 +56,19 @@ const DashboardContent = (props) => {
           setShowPageError(true);
         }
         if (!user?.pinCode || !user?.uniqueUrl) {
-          props.generateUniqueUrl();
-          props.generatePinCode();
+          props.generateUniqueUrl({ fromDashboard: true });
+          props.generatePinCode({ fromDashboard: true });
         }
       }
     }
   }, [user]);
 
   useEffect(() => {
-    const { dashboardResponse, pinCodeGenerated } = props;
+    const { embeddedLinkResponse, pinCodeGenerated } = props;
     if (pinCodeGenerated && showPageError) {
       props.saveData({
         id: currentUser?.uid,
-        data: { pinCode: dashboardResponse },
+        data: { pinCode: embeddedLinkResponse },
       });
       props.getProfile();
       toast({
@@ -91,12 +91,13 @@ const DashboardContent = (props) => {
   }, [pages, databases]);
 
   useEffect(() => {
-    const { uniqueLinkGenerated, dashboardResponse } = props;
+    const { uniqueLinkGenerated, embeddedLinkResponse } = props;
     if (uniqueLinkGenerated) {
-      if ((dashboardResponse && showRefreshLinkModal) || showPageError) {
+      console.log("Called");
+      if ((embeddedLinkResponse && showRefreshLinkModal) || showPageError) {
         props.saveData({
           id: currentUser?.uid,
-          data: { uniqueUrl: dashboardResponse },
+          data: { uniqueUrl: embeddedLinkResponse },
         });
         if (showRefreshLinkModal) {
           toast({
@@ -115,10 +116,11 @@ const DashboardContent = (props) => {
   }, [props.uniqueLinkGenerated]);
 
   useEffect(() => {
-    const { dashboardResponse, dashboardError } = props;
-    if (dashboardResponse) {
+    const { pagesResponse, pagesError, embeddedLinkError, taskDatabaseError } =
+      props;
+    if (pagesResponse) {
       if (showChangePageModal) {
-        if (dashboardResponse?.pinCodeBlock) {
+        if (pagesResponse?.pinCodeBlock) {
           setShowPageError(false);
           props.getProfile();
           toast({
@@ -133,7 +135,7 @@ const DashboardContent = (props) => {
         }
       }
     }
-    if (dashboardError) {
+    if (pagesError || embeddedLinkError || taskDatabaseError) {
       setShowLoader(false);
       setShowChangePageModal(false);
       setShowRefreshLinkModal(false);
@@ -142,7 +144,12 @@ const DashboardContent = (props) => {
       setShowChangePageModal(false);
       setShowEmbedInNotionModal(false);
     }
-  }, [props.dashboardResponse, props.dashboardError]);
+  }, [
+    props.pagesResponse,
+    props.pagesError,
+    props.taskDatabaseError,
+    props.embeddedLinkError,
+  ]);
 
   const handleRefreshLinkClick = () => {
     setDisabledRefreshLinkButton(true);
@@ -163,7 +170,7 @@ const DashboardContent = (props) => {
   };
 
   const handelOkClickRefreshLinkModal = () => {
-    props.generateUniqueUrl();
+    props.generateUniqueUrl({ fromDashboard: true });
   };
 
   const handelCancelClickRefreshLinkModal = () => {
@@ -197,7 +204,7 @@ const DashboardContent = (props) => {
       id: currentUser?.uid,
       data: { page: pageOptionValue },
     });
-    props.embededPinCode();
+    props.embeddedPinCode();
   };
 
   const handelCancelClickChangePageModal = () => {
@@ -364,7 +371,9 @@ const DashboardContent = (props) => {
                   }}
                   mr={10}
                 >
-                  This is the page where the PIN code will be embedded. we will not remove anything from this page, only add the security authentication code.
+                  This is the page where the PIN code will be embedded. we will
+                  not remove anything from this page, only add the security
+                  authentication code.
                 </Text>
               </Box>
               <Box>

@@ -14,19 +14,14 @@ const useQuery = () => {
 };
 
 export const OnBoardingSteps = (props) => {
-  const {
-    uniqueLinkGenerated,
-    pinCodeGenerated,
-    dashboardError,
-    dashboardResponse,
-  } = props;
+  const { uniqueLinkGenerated, pinCodeGenerated } = props;
 
   const toast = useToast();
   const { currentUser } = useAuth();
   const location = useLocation();
   const query = useQuery();
   const history = useHistory();
-  const { nextStep, prevStep, reset, activeStep } = useSteps({
+  const { nextStep, activeStep } = useSteps({
     initialStep: 0,
   });
   const [connectNotionSuccess, setConnentNotionSuccess] = useState(false);
@@ -60,7 +55,7 @@ export const OnBoardingSteps = (props) => {
   }, [props.response, props.error]);
 
   useEffect(() => {
-    const { databases, dashboardError, pages } = props;
+    const { databases, pagesError, pages, taskDatabaseError } = props;
     if (activeStep === 1) {
       if (databases && pages) {
         setConnentNotionError(false);
@@ -76,7 +71,7 @@ export const OnBoardingSteps = (props) => {
         nextStep();
         props.generatePinCode();
       }
-      if (dashboardError) {
+      if (pagesError || taskDatabaseError) {
         setConnentDatabaseError(true);
       }
     }
@@ -95,11 +90,11 @@ export const OnBoardingSteps = (props) => {
 
   useEffect(() => {
     if (pinCodeGenerated) {
-      if (dashboardResponse) {
+      if (props?.embeddedLinkResponse) {
         props.saveData({
           id: currentUser?.uid,
           data: {
-            pinCode: dashboardResponse,
+            pinCode: props?.embeddedLinkResponse,
           },
         });
       }
@@ -109,29 +104,33 @@ export const OnBoardingSteps = (props) => {
 
   useEffect(() => {
     if (uniqueLinkGenerated) {
-      if (dashboardResponse) {
+      if (props?.embeddedLinkResponse) {
         props.saveData({
           id: currentUser?.uid,
           data: {
-            uniqueUrl: dashboardResponse,
+            uniqueUrl: props?.embeddedLinkResponse,
             urlEnabled: true,
           },
         });
       }
-      props.resetPreparingStates();
+      props.resetEmbeddedLinkStates();
+      props.resetTaskDataBaseStates();
+      props.resetPagesStates();
       props.resetNotionAuthStates();
       props.resetSignInStates();
-      toast({
-        position: "bottom-right",
-        title: Toast.SocialLoginVerification.success.title,
-        description: `${Toast.SocialLoginVerification.success.description} 0 `,
-        duration: Toast.SocialLoginVerification.success.duration,
-        status: "success",
-        isClosable: true,
-      });
-      localStorage.setItem(LocalStorage.TOKEN, currentUser?.accessToken);
-      localStorage.setItem(LocalStorage.USER_ID, currentUser?.uid);
-      history.push("/app/widgets/espresso");
+      setTimeout(() => {
+        toast({
+          position: "bottom-right",
+          title: Toast.SocialLoginVerification.success.title,
+          description: `${Toast.SocialLoginVerification.success.description} 0 `,
+          duration: Toast.SocialLoginVerification.success.duration,
+          status: "success",
+          isClosable: true,
+        });
+        localStorage.setItem(LocalStorage.TOKEN, currentUser?.accessToken);
+        localStorage.setItem(LocalStorage.USER_ID, currentUser?.uid);
+        history.push("/app/widgets/espresso");
+      }, 5000);
     }
   }, [uniqueLinkGenerated]);
 

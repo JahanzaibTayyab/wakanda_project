@@ -63,7 +63,8 @@ const BeforeStart = (props) => {
           <Flex justify="center" mb="2">
             <Button
               type="submit"
-              colorScheme="yellow"
+              bg="yellow.600"
+              textColor="white"
               size="md"
               fontSize="sm"
               onClick={handelClick}
