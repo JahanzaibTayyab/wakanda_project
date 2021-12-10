@@ -32,7 +32,7 @@ const BeforeStart = (props) => {
         <Box maxW="md" mx="auto">
           <Logo
             mx="auto"
-            h="8"
+            h="6"
             mb={{
               base: "10",
               md: "20",
@@ -52,7 +52,11 @@ const BeforeStart = (props) => {
             fontSize="18px"
           >
             <Text as="span">Duplicate the</Text>
-            <Link href="https://www.notion.coffee" target="_blank">
+            <Link
+              isExternal={true}
+              href="https://www.notion.so/mikecafe/Notion-Coffe-Espresso-Demo-24f1ef7413b84ade8241d226cc45c706"
+              target="_blank"
+            >
               <Text as="u" mr="1">
                 Task Management Template
               </Text>
@@ -72,12 +76,14 @@ const BeforeStart = (props) => {
               Continue
             </Button>
           </Flex>
-
-          <Image
-            src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/beforeStart.gif?alt=media&token=f466e9a9-0c7c-421e-b055-a6fed3814e37"
-            alt="Img"
-            boxShadow="dark-lg"
-          />
+          <Box boxShadow="dark-lg" marginTop="5">
+            <Image
+              top="-5"
+              position="relative"
+              src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/beforePic.png?alt=media&token=c94b271d-9a3f-4f62-bfc9-6cf83198c65e"
+              alt="Img"
+            />
+          </Box>
         </Box>
       </Box>
     </>

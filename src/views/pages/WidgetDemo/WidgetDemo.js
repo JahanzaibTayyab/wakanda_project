@@ -9,18 +9,19 @@ import {
   VStack,
   Button,
   Center,
+  Box,
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
 import "firebase/firestore";
 import { Formik, Form, Field } from "formik";
 import WidgetButtons from "../../components/widget/WidgetButtons";
-import { useParams } from "react-router";
+// import { useParams } from "react-router";
 import { PinInput, PinInputField } from "@chakra-ui/react";
 import { auth, functions } from "../../../utils/init-firebase";
 import { httpsCallable } from "@firebase/functions";
-import { signInWithCustomToken } from "@firebase/auth";
-import { useAuth } from "../../../contexts/AuthContext";
+// import { signInWithCustomToken } from "@firebase/auth";
+// import { useAuth } from "../../../contexts/AuthContext";
 
 const REGEX_LIST = [
   { field: "date", regex: /(0?[1-9]|[12][0-9]|3[01])[\/\|-](0?[1-9]|1[0-2])/g },
@@ -37,10 +38,10 @@ const REGEX_LIST = [
   { field: "categories", regex: /(?:#)(.[^\s]*)/g },
 ];
 
-function Widget() {
+function WidgetDemo() {
   const cancelRef = React.useRef();
   const saveCallable = httpsCallable(functions, "saveSingleTask");
-  const { uniqueUrl } = useParams();
+  // const { uniqueUrl } = useParams();
   const [inputValue, setInputValue] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [categories, setCategories] = React.useState([]);
@@ -52,91 +53,80 @@ function Widget() {
   const [pinLoading, setPinLoading] = React.useState(false);
   const [pinError, setPinError] = React.useState(false);
 
-  const { currentUser, logout } = useAuth();
-
-  useEffect(() => {
-    if (currentUser) {
-      setAllowed(true);
-      setPinLoading(false);
-    } else {
-      setAllowed(false);
-    }
-  }, [currentUser]);
-
   if (!isAllowed) {
     return (
-      <VStack size="sm" maxW="380px" mx="auto">
-        {pinLoading ? (
-          <Progress colorScheme="yellow" size="xs" isIndeterminate />
-        ) : (
-          ""
-        )}
-        <Text pt="2" pb="0" fontSize="sm">
-          Enter Pin Code
-        </Text>
-        <Center pb="0" w="100%">
-          <VStack>
-            <Text align="center" fontSize="xs">
-              {" "}
-              This is the 9 characters alphanumeric code embedded in your Notion
-              page.
-            </Text>
-            <HStack>
-              <PinInput
-                errorBorderColor="red.100"
-                focusBorderColor="yellow.500"
-                isInvalid={pinError}
-                isDisabled={pinLoading}
-                type="alphanumeric"
-                size="sm"
-                otp
-                mask
-                onChange={() => setPinError(false)}
-                onComplete={async (value) => {
-                  setPinLoading(true);
-                  const oneTimeAuthCallable = httpsCallable(
-                    functions,
-                    "oneTimeAuth"
-                  );
-                  await oneTimeAuthCallable({
-                    uniqueUrl:
-                      "https://app.notion.coffee/w/espresso/" + uniqueUrl,
-                    pinCode: value,
-                  })
-                    .then((res) => {
-                      signInWithCustomToken(auth, res.data.token)
-                        .then((userCredential) => {
-                          // Signed in
-                        })
-                        .catch((error) => {
-                          setPinError(true);
-                          setPinLoading(false);
-                          // ...
-                        });
+        <VStack size="sm" maxW="380px" mx="auto">
+          {pinLoading ? (
+            <Progress colorScheme="yellow" size="xs" isIndeterminate />
+          ) : (
+            ""
+          )}
+          <Text pt="2" pb="0" fontSize="sm">
+            Enter Pin Code
+          </Text>
+          <Center pb="2" w="100%">
+            <VStack>
+              <Text align="center" fontSize="xs">
+                {" "}
+                This is the 9 characters alphanumeric code embedded in your
+                Notion page.
+              </Text>
+              <HStack>
+                <PinInput
+                  errorBorderColor="red.100"
+                  focusBorderColor="yellow.500"
+                  isInvalid={pinError}
+                  isDisabled={pinLoading}
+                  type="alphanumeric"
+                  size="sm"
+                  otp
+                  mask
+                  onChange={() => setPinError(false)}
+                  onComplete={async (value) => {
+                    setPinLoading(true);
+                    const oneTimeAuthCallable = httpsCallable(
+                      functions,
+                      "oneTimeAuth"
+                    );
+                    await oneTimeAuthCallable({
+                      uniqueUrl:
+                        "https://react-coffee-a2736.web.app/espresso/demo",
+                      pinCode: value,
                     })
-                    .catch((err) => {
-                      console.log("error", err);
-                      setPinError(true);
-                      setPinLoading(false);
-                    });
-                }}
-              >
-                <PinInputField />
-                <PinInputField />
-                <PinInputField />
-                <PinInputField />
-                <PinInputField />
-                <PinInputField />
-                <PinInputField />
-                <PinInputField />
-              </PinInput>
-            </HStack>{" "}
-          </VStack>{" "}
-        </Center>{" "}
-        <Text py="1" pt="0" pr="8" fontSize="xs" color="red.500">
-          {pinError ? "Incorrect pin or url" : ""}
-        </Text>
-      </VStack>
+                      .then((res) => {
+                        if (res.data.demo) {
+                          setAllowed(true);
+                          setPinLoading(false);
+                          setPinError(false);
+                        } else {
+                          setAllowed(false);
+                          setPinLoading(false);
+                          setPinError(false);
+                        }
+                      })
+                      .catch((err) => {
+                        console.log("error", err);
+                        setPinError(true);
+                        setPinLoading(false);
+                      });
+                  }}
+                >
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                  <PinInputField />
+                </PinInput>
+              </HStack>{" "}
+            </VStack>{" "}
+          </Center>{" "}
+          <Text py="1" pt="0" pr="8" fontSize="xs" color="red.500">
+            {pinError ? "Incorrect pin or url" : ""}
+          </Text>
+        </VStack>
     );
   }
 
@@ -291,11 +281,8 @@ function Widget() {
           </Form>
         )}
       </Formik>
-      <Button size="xs" onClick={logout} colorScheme='yellow' variant='outline'>
-        logout
-      </Button>
     </>
   );
 }
 
-export default Widget;
+export default WidgetDemo;

@@ -6,7 +6,7 @@ import {
   Divider,
   useColorModeValue as mode,
 } from "@chakra-ui/react";
-import { FaReact } from "react-icons/fa";
+import { ArrowRightIcon,ExternalLinkIcon } from '@chakra-ui/icons'
 import { connect } from "react-redux";
 import { Logo } from "../controls/DashboardLogo";
 import { MobileMenuButton } from "./MobileMenuButton";
@@ -87,14 +87,14 @@ const SideBar = (props) => {
                 <Stack pb="6">
                   <NavSectionTitle>Widgets</NavSectionTitle>
                   <SidebarLink
-                    icon={<FaReact />}
+                    icon={<ArrowRightIcon />}
                     href={match.url + "/widgets/espresso"}
                     fontStyle="italic"
                   >
                     Espresso
                   </SidebarLink>
                   <SidebarLink
-                    icon={<FaReact />}
+                    icon={<ArrowRightIcon />}
                     showComingSoon
                     href={match.url + "#"}
                     fontStyle="italic"
@@ -102,7 +102,7 @@ const SideBar = (props) => {
                     Latte
                   </SidebarLink>
                   <SidebarLink
-                    icon={<FaReact />}
+                    icon={<ArrowRightIcon />}
                     showComingSoon
                     href={match.url + "#"}
                     fontStyle="italic"
@@ -110,7 +110,7 @@ const SideBar = (props) => {
                     Flat white
                   </SidebarLink>
                   <SidebarLink
-                    icon={<FaReact />}
+                    icon={<ArrowRightIcon />}
                     showComingSoon
                     href={match.url + "#"}
                     fontStyle="italic"
@@ -122,7 +122,7 @@ const SideBar = (props) => {
               <Flex direction="column">
                 <Divider mb={5} />
                 <Stack pb="6">
-                  <SidebarLink icon={<FaReact />} onClick={logoutUser}>
+                  <SidebarLink icon={<ExternalLinkIcon />} onClick={logoutUser}>
                     Logout
                   </SidebarLink>
                 </Stack>

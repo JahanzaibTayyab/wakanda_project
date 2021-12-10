@@ -40,7 +40,7 @@ const schema = yup.object().shape({
     .required()
     .matches(
       /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-      "Password must contain at least 8 characters (lowercase and uppercase), one number and one special case character"
+      "Password must contain at least 8 characters (lowercase and uppercase), one number and one special character"
     ),
   confirmPassword: yup
     .string()
@@ -135,7 +135,7 @@ const Signup = (props) => {
         <Box maxW="md" mx="auto">
           <Logo
             mx="auto"
-            h="8"
+            h="6"
             mb={{
               base: "10",
               md: "20",
@@ -232,7 +232,10 @@ const Signup = (props) => {
                   isDisabled={disabledForm}
                 >
                   I read and accept the
-                  <Link>
+                  <Link
+                    href="https://www.notion.so/mikecafe/Terms-and-Conditions-7ff554e60e3d48069849821d14a4c9f9"
+                    isExternal={true}
+                  >
                     <Text pr="1" as="u" fontWeight={500}>
                       terms & conditions{" "}
                     </Text>
@@ -247,7 +250,10 @@ const Signup = (props) => {
                   onChange={(e) => setCheckedPrivacyPolicy(e.target.checked)}
                 >
                   I read and accept the
-                  <Link>
+                  <Link
+                    href="https://www.notion.so/mikecafe/Privacy-Policy-509f3be10de7493db4f09f59519b2ece"
+                    isExternal={true}
+                  >
                     <Text pr="1" as="u" fontWeight={500}>
                       privacy policy
                     </Text>

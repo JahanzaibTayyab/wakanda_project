@@ -295,7 +295,6 @@ const DashboardContent = (props) => {
               </Box>
               <Box>
                 <RefreshLink
-                  icon={props.refreshIcon}
                   inputValue={user?.uniqueUrl}
                 />
                 <Flex justify="flex-end">

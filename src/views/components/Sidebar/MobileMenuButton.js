@@ -1,7 +1,8 @@
 import { Box } from "@chakra-ui/react";
 import * as React from "react";
 import { HiX } from "react-icons/hi";
-import { FaReact } from "react-icons/fa";
+import { HamburgerIcon } from '@chakra-ui/icons';
+
 export const MobileMenuButton = (props) => {
   const { onClick, isOpen } = props;
   return (
@@ -24,7 +25,7 @@ export const MobileMenuButton = (props) => {
       onClick={onClick}
     >
       <Box srOnly>{isOpen ? "Close Menu" : "Open Menu"}</Box>
-      {isOpen ? <HiX /> : <FaReact />}
+      {isOpen ? <HiX /> : <HamburgerIcon />}
     </Box>
   );
 };

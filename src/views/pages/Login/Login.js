@@ -48,7 +48,7 @@ const schema = yup.object().shape({
     .required()
     .matches(
       /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
-      "Password must contain at least 8 characters (lowercase and uppercase), one number and one special case character"
+      "Password must contain at least 8 characters (lowercase and uppercase), one number and one special character"
     ),
 });
 
@@ -284,7 +284,7 @@ const Login = (props) => {
         <Box maxW="md" mx="auto">
           <Logo
             mx="auto"
-            h="8"
+            h="6"
             mb={{
               base: "10",
               md: "20",

@@ -1,10 +1,11 @@
 import React from "react";
 import EspressoContent from "../../components/espresso";
-import { FaReact } from "react-icons/fa";
+import { RepeatIcon } from '@chakra-ui/icons'
+
 export const Dashboard = (props) => {
   return (
     <>
-      <EspressoContent {...props} refreshIcon={<FaReact />} title="Espresso" />
+      <EspressoContent {...props} refreshIcon={<RepeatIcon />} title="Espresso" />
     </>
   );
 };

@@ -7,6 +7,8 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
+import { CopyIcon } from "@chakra-ui/icons";
+
 const RefreshLink = (props) => {
   const toast = useToast();
   const { icon, inputValue, ...rest } = props;
@@ -34,8 +36,7 @@ const RefreshLink = (props) => {
             <IconButton
               bg="transparent !important"
               variant="ghost"
-              icon={icon}
-              onClick={onCopy}
+              icon={CopyIcon}
             />
           }
         />

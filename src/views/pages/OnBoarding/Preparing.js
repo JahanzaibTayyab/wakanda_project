@@ -35,7 +35,7 @@ const Preparing = (props) => {
         <Box maxW="md" mx="auto">
           <Logo
             mx="auto"
-            h="8"
+            h="6"
             mb={{
               base: "10",
               md: "20",

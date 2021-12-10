@@ -68,7 +68,7 @@ export default function ResetPasswordPage() {
     >
       <Logo
         mx="auto"
-        h="8"
+        h="6"
         mb={{
           base: "10",
           md: "20",

@@ -73,7 +73,39 @@ export const oauthToken = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
-      if (!uid) {
+      if (uid) {
+        const code: string = data.code as string;
+        return notionOauth.code
+            .getToken(redirectUrl + "?code=" + code + "&state=A", {
+              body: {
+                code: code,
+                redirect_uri: redirectUrl,
+                grant_type: "authorization_code",
+              },
+              state: "A",
+            })
+            .then((token: any) => {
+              const userRef = db.collection("notionAuth").doc(uid? uid:"");
+              userRef.get().then((d: any) => d.exists);
+              return userRef
+                  .set(token.data)
+                  .then(() => {
+                    return {
+                      success: true,
+                      workspaceIcon: token.data.workspace_icon,
+                      workspace: token.data.workspace_name,
+                    };
+                  })
+                  .catch((error: any) => {
+                    functions.logger.error("Access Token Error\n", error);
+                    throw new functions.https.HttpsError("internal", error);
+                  });
+            })
+            .catch((error: any) => {
+              functions.logger.error("Code get Token Error\n", error);
+              throw new functions.https.HttpsError("internal", error);
+            });
+      } else {
         throw new functions.https.HttpsError(
             "unauthenticated",
             "Not authenticated"
@@ -98,7 +130,7 @@ export const oauthToken = functions
             state: "A",
           })
           .then((token: any) => {
-            const userRef = db.collection("notionAuth").doc(uid);
+            const userRef = db.collection("notionAuth").doc(uid? uid:"");
             userRef.get().then((d: any) => d.exists);
             return userRef
                 .set(token.data)
@@ -124,6 +156,7 @@ export const listpages = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
+      const query: string | undefined = data.query;
       if (uid) {
         return db
             .collection("notionAuth")
@@ -139,6 +172,7 @@ export const listpages = functions
                 const notion = new Client({auth: documentData.accessToken});
                 return notion
                     .search({
+                      query: query,
                       filter: {
                         value: "page",
                         property: "object",
@@ -183,6 +217,8 @@ export const listdatabases = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
+      const query: string | undefined = data.query;
+      functions.logger.info("Query supplied is: \n", query);
       if (uid) {
         return db
             .collection("notionAuth")
@@ -198,6 +234,7 @@ export const listdatabases = functions
                 const notion = new Client({auth: documentData.accessToken});
                 return notion
                     .search({
+                      query: query,
                       filter: {
                         value: "database",
                         property: "object",
@@ -606,4 +643,86 @@ export const embedPinCode = functions
             "Not authenticated"
         );
       }
+    });
+
+/*
+  for testing
+  oneTimeAuth(
+  {
+    pinCode:"5k1341vm",
+    uniqueUrl:"https://app.notion.coffee/w/espresso/99dea72b-7be5-465c-8981-edf3707f4089-1638024362762"
+  }
+  )
+ */
+export const oneTimeAuth = functions
+    .region("europe-west3")
+    .https.onCall((data, context) => {
+      const pinCode = data.pinCode;
+      const uniqueUrl = data.uniqueUrl;
+      if (!pinCode || !uniqueUrl) {
+        throw new functions.https.HttpsError(
+            "failed-precondition",
+            "Missing necessary inputs."
+        );
+      }
+
+      if (uniqueUrl=="https://react-coffee-a2736.web.app/espresso/demo") {
+        if (pinCode=="9tj421mn") {
+          return {
+            demo: true,
+          };
+        } else {
+          throw new functions.https.HttpsError(
+              "internal",
+              "No matching documents."
+          );
+        }
+      }
+
+      return db.collection("users")
+          .where("uniqueUrl", "==", uniqueUrl)
+          .where("pinCode", "==", pinCode)
+          .get()
+          .then((snapshot) => {
+            if (snapshot.empty) {
+              functions.logger.info("No matching documents.");
+              throw new functions.https.HttpsError(
+                  "internal",
+                  "No matching documents."
+              );
+            }
+
+            if (snapshot.docs.length > 1) {
+              functions.logger.info("Duplicated documents.");
+              throw new functions.https.HttpsError(
+                  "internal",
+                  "More than one document"
+              );
+            }
+            let responsePromise;
+            snapshot.forEach((doc) => {
+              functions.logger.info(
+                  "found matching user document with uid",
+                  doc.id);
+              responsePromise = admin
+                  .auth()
+                  .createCustomToken(doc.id)
+                  .then((customToken:string) => {
+                    // Send token back to client
+                    functions.logger.info(customToken);
+                    return {token: customToken};
+                  })
+                  .catch((error) => {
+                    functions.logger.error(
+                        "Error creating custom token:",
+                        error
+                    );
+                    throw new functions.https.HttpsError(
+                        "internal",
+                        "Error when creating custom token"
+                    );
+                  });
+            });
+            return responsePromise;
+          });
     });

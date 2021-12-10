@@ -64,7 +64,7 @@ const Notion1 = (props) => {
         <Box maxW="md" mx="auto">
           <Logo
             mx="auto"
-            h="8"
+            h="6"
             mb={{
               base: "10",
               md: "20",
@@ -84,7 +84,11 @@ const Notion1 = (props) => {
             fontSize="18px"
           >
             <Text as="span">Allow access to</Text>
-            <Link href="https://www.notion.coffee" target="_blank">
+            <Link
+              isExternal={true}
+              href="https://www.notion.so/mikecafe/Notion-Coffe-Espresso-Demo-24f1ef7413b84ade8241d226cc45c706"
+              target="_blank"
+            >
               <Text as="u" mr="1">
                 Notion Coffee
               </Text>
@@ -107,10 +111,12 @@ const Notion1 = (props) => {
               Connect Notion
             </Button>
           </Flex>
-          <Image
-            src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/beforeStart.png?alt=media&token=222495a4-3651-4440-a9cf-3941fb08959a"
-            alt="Img"
-          />
+          <Box boxShadow="dark-lg" marginTop="5">
+            <Image
+              src="https://firebasestorage.googleapis.com/v0/b/react-coffee-a2736.appspot.com/o/notion1.gif?alt=media&token=01728005-9d1f-4204-a1d8-922556ca1623"
+              alt="Img"
+            />
+          </Box>
         </Box>
       </Box>
     </>
