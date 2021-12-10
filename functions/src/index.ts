@@ -43,22 +43,18 @@ const notionOauth = new ClientOAuth2({
   scopes: [],
 });
 
-functions.logger.info("notion oauth", notionOauth);
 
 export const oauthUrl = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
-      functions.logger.info("start with context" + context);
       const uid = context.auth?.uid;
       if (uid) {
         try {
-          functions.logger.info("inside try with uid: " + uid);
           const authorizationUri = notionOauth.code.getUri(
               {
                 state: "A", query: {owner: "user"},
               }
           );
-          functions.logger.info(authorizationUri);
           return {redirectUrl: authorizationUri};
         } catch (e) {
           functions.logger.error("An internal error" + e);
@@ -156,7 +152,7 @@ export const listpages = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
-      const query: string | undefined = data.query;
+      const query: string | undefined = data?.query;
       if (uid) {
         return db
             .collection("notionAuth")
@@ -217,8 +213,7 @@ export const listdatabases = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
-      const query: string | undefined = data.query;
-      functions.logger.info("Query supplied is: \n", query);
+      const query: string | undefined = data?.query;
       if (uid) {
         return db
             .collection("notionAuth")
@@ -701,15 +696,11 @@ export const oneTimeAuth = functions
             }
             let responsePromise;
             snapshot.forEach((doc) => {
-              functions.logger.info(
-                  "found matching user document with uid",
-                  doc.id);
               responsePromise = admin
                   .auth()
                   .createCustomToken(doc.id)
                   .then((customToken:string) => {
                     // Send token back to client
-                    functions.logger.info(customToken);
                     return {token: customToken};
                   })
                   .catch((error) => {

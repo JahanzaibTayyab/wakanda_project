@@ -12,7 +12,8 @@ import { FIND_PAGE, EMBEDDED_PIN_CODE } from "../types";
 
 const getFindPageApi = async (payload) => {
   const listPages = httpsCallable(functions, "listpages");
-  const response = await listPages();
+  const requestBody = payload.fromDashboard? {} : {query:"Notion Coffee"};
+  const response = await listPages(requestBody);
   if (response) {
     const data = response.data.pages;
     if (data.length > 0) {

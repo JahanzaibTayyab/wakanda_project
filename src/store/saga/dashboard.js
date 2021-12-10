@@ -31,8 +31,7 @@ const toast = createStandaloneToast();
 
 const getFindPageApi = async (payload) => {
   const listPages = httpsCallable(functions, "listpages");
-  const requestData = payload.fromDashBoard? {}: {query:"Notion Coffee"};
-  const response = await listPages(requestData);
+  const response = await listPages({});
   if (response) {
     const data = response.data.pages;
     if (data.length > 0) {
@@ -72,8 +71,7 @@ export function* callFindPage() {
 
 const getFindDataBaseApi = async (payload) => {
   const findDataBase = httpsCallable(functions, "listdatabases");
-  const requestData = payload.fromDashBoard? {}: {query:"Task Database"};
-  const response = await findDataBase(requestData);
+  const response = await findDataBase({});
   
   if (response) {
     if (response.data.databases.length > 0) {

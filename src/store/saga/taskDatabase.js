@@ -11,7 +11,8 @@ import { FIND_DATABASE } from "../types";
 
 const getFindDataBaseApi = async (payload) => {
   const findDataBase = httpsCallable(functions, "listdatabases");
-  const response = await findDataBase();
+  const requestBody = payload.fromDashboard? {} : {query:"Task Database"};
+  const response = await findDataBase(requestBody);
   if (response) {
     if (response.data.databases.length > 0) {
       return response;
