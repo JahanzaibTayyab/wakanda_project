@@ -93,7 +93,6 @@ const DashboardContent = (props) => {
   useEffect(() => {
     const { uniqueLinkGenerated, embeddedLinkResponse } = props;
     if (uniqueLinkGenerated) {
-      console.log("Called");
       if ((embeddedLinkResponse && showRefreshLinkModal) || showPageError) {
         props.saveData({
           id: currentUser?.uid,
@@ -212,16 +211,7 @@ const DashboardContent = (props) => {
   };
 
   const handelOkClickEmbedInNotionModal = () => {
-    toast({
-      position: "bottom-right",
-      title: ModalToast.EmbedInNotion.success.title,
-      description: ModalToast.EmbedInNotion.success.description,
-      duration: ModalToast.EmbedInNotion.success.duration,
-      status: "success",
-      isClosable: true,
-    });
-    setDisabledEmbedWidgetButton(false);
-    setShowEmbedInNotionModal(false);
+    props.embeddedPinCode();
   };
 
   const handelCancelClickEmbedInNotionModal = () => {
@@ -294,9 +284,7 @@ const DashboardContent = (props) => {
                 </Text>
               </Box>
               <Box>
-                <RefreshLink
-                  inputValue={user?.uniqueUrl}
-                />
+                <RefreshLink inputValue={user?.uniqueUrl} />
                 <Flex justify="flex-end">
                   <Button
                     bg="yellow.600"
