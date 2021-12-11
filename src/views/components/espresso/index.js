@@ -118,8 +118,12 @@ const DashboardContent = (props) => {
     const { pagesResponse, pagesError, embeddedLinkError, taskDatabaseError } =
       props;
     if (pagesResponse) {
-      if (showChangePageModal) {
+      if (showChangePageModal || showEmbedInNotionModal) {
         if (pagesResponse?.pinCodeBlock) {
+          props.saveData({
+            id: currentUser?.uid,
+            data: { pinCodeBlock: pagesResponse?.pinCodeBlock },
+          });
           setShowPageError(false);
           props.getProfile();
           toast({

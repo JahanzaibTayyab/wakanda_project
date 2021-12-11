@@ -43,18 +43,16 @@ const notionOauth = new ClientOAuth2({
   scopes: [],
 });
 
-
 export const oauthUrl = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid = context.auth?.uid;
       if (uid) {
         try {
-          const authorizationUri = notionOauth.code.getUri(
-              {
-                state: "A", query: {owner: "user"},
-              }
-          );
+          const authorizationUri = notionOauth.code.getUri({
+            state: "A",
+            query: {owner: "user"},
+          });
           return {redirectUrl: authorizationUri};
         } catch (e) {
           functions.logger.error("An internal error" + e);
@@ -81,7 +79,7 @@ export const oauthToken = functions
               state: "A",
             })
             .then((token: any) => {
-              const userRef = db.collection("notionAuth").doc(uid? uid:"");
+              const userRef = db.collection("notionAuth").doc(uid ? uid : "");
               userRef.get().then((d: any) => d.exists);
               return userRef
                   .set(token.data)
@@ -114,8 +112,7 @@ export const oauthToken = functions
             "No code in request body"
         );
       }
-      const fullUrl = redirectUrl + "?code=" + code + "&state=A" +
-        "&owner=user";
+      const fullUrl = redirectUrl + "?code=" + code + "&state=A" + "&owner=user";
       return notionOauth.code
           .getToken(fullUrl, {
             body: {
@@ -126,7 +123,7 @@ export const oauthToken = functions
             state: "A",
           })
           .then((token: any) => {
-            const userRef = db.collection("notionAuth").doc(uid? uid:"");
+            const userRef = db.collection("notionAuth").doc(uid ? uid : "");
             userRef.get().then((d: any) => d.exists);
             return userRef
                 .set(token.data)
@@ -184,10 +181,7 @@ export const listpages = functions
                       };
                     })
                     .catch((error: NotionClientError) => {
-                      functions.logger.error(
-                          "Error retrieving database:\n",
-                          error
-                      );
+                      functions.logger.error("Error retrieving database:\n", error);
                       throw new functions.https.HttpsError(
                           "unknown",
                           error.message,
@@ -245,10 +239,7 @@ export const listdatabases = functions
                       };
                     })
                     .catch((error: NotionClientError) => {
-                      functions.logger.error(
-                          "Error retrieving database:\n",
-                          error
-                      );
+                      functions.logger.error("Error retrieving database:\n", error);
                       throw new functions.https.HttpsError(
                           "unknown",
                           error.message,
@@ -508,6 +499,7 @@ export const embedPinCode = functions
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
       if (uid) {
+        functions.logger.log("UUID", uid);
         return db
             .collection("users")
             .doc(uid)
@@ -518,7 +510,9 @@ export const embedPinCode = functions
                 userData &&
             Object.prototype.hasOwnProperty.call(userData, "pinCode")
               ) {
-                db.collection("notionAuth")
+                functions.logger.log("userObject", userData);
+                return db
+                    .collection("notionAuth")
                     .doc(uid)
                     .withConverter(tokenConverter)
                     .get()
@@ -536,6 +530,7 @@ export const embedPinCode = functions
                         });
 
                         if (userData?.pinCodeBlock) {
+                          functions.logger.log("If block if pinCode exist", uid);
                           return notion.blocks
                               .update({
                                 block_id: userData?.pinCodeBlock,
@@ -544,14 +539,14 @@ export const embedPinCode = functions
                                     {
                                       type: "text",
                                       text: {
-                                        content:
-                                          `Pin Code : ${userData?.pinCode}`,
+                                        content: `Pin Code : ${userData?.pinCode}`,
                                       },
                                     },
                                   ],
                                 },
                               })
                               .then((res) => {
+                                functions.logger.log("if response", res);
                                 return {
                                   success: true,
                                   pinCodeBlock: res.id,
@@ -569,6 +564,10 @@ export const embedPinCode = functions
                                 );
                               });
                         } else {
+                          functions.logger.log(
+                              "else case block if pinCode  not exist"
+                          );
+                          functions.logger.log("else userData", userData);
                           return notion.blocks.children
                               .append({
                                 block_id: userData?.page,
@@ -585,11 +584,9 @@ export const embedPinCode = functions
                                         {
                                           type: "text",
                                           text: {
-                                            content:
-                                              `Pin Code : ${userData?.pinCode}`,
+                                            content: `Pin Code : ${userData?.pinCode}`,
                                           },
-                                          plain_text:
-                                            `Pin Code : ${userData?.pinCode}`,
+                                          plain_text: `Pin Code : ${userData?.pinCode}`,
                                           annotations: {
                                             bold: false,
                                             italic: false,
@@ -605,10 +602,11 @@ export const embedPinCode = functions
                                   },
                                 ],
                               })
-                              .then((res: any) => {
+                              .then((res) => {
+                                functions.logger.log("else response", res.id);
                                 return {
                                   success: true,
-                                  pinCodeBlock: res.results[0].id,
+                                  pinCodeBlock: res.id,
                                 };
                               })
                               .catch((error: NotionClientError) => {
@@ -630,6 +628,11 @@ export const embedPinCode = functions
                         );
                       }
                     });
+              } else {
+                throw new functions.https.HttpsError(
+                    "unauthenticated",
+                    "Not authenticated"
+                );
               }
             });
       } else {
@@ -661,8 +664,8 @@ export const oneTimeAuth = functions
         );
       }
 
-      if (uniqueUrl=="https://react-coffee-a2736.web.app/espresso/demo") {
-        if (pinCode=="9tj421mn") {
+      if (uniqueUrl == "https://react-coffee-a2736.web.app/espresso/demo") {
+        if (pinCode == "9tj421mn") {
           return {
             demo: true,
           };
@@ -674,7 +677,8 @@ export const oneTimeAuth = functions
         }
       }
 
-      return db.collection("users")
+      return db
+          .collection("users")
           .where("uniqueUrl", "==", uniqueUrl)
           .where("pinCode", "==", pinCode)
           .get()
@@ -699,15 +703,12 @@ export const oneTimeAuth = functions
               responsePromise = admin
                   .auth()
                   .createCustomToken(doc.id)
-                  .then((customToken:string) => {
+                  .then((customToken: string) => {
                     // Send token back to client
                     return {token: customToken};
                   })
                   .catch((error) => {
-                    functions.logger.error(
-                        "Error creating custom token:",
-                        error
-                    );
+                    functions.logger.error("Error creating custom token:", error);
                     throw new functions.https.HttpsError(
                         "internal",
                         "Error when creating custom token"
