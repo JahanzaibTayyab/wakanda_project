@@ -38,6 +38,7 @@ const EmbeddedLink = (state = INIT_STATE, action) => {
         loading: false,
         response: action.payload,
         uniqueLinkGenerated: true,
+        uniqueLink:action.payload,
       };
     case GENERATE_UNIQUE_URL_FAILURE:
       return { ...state, loading: false, error: action.payload };

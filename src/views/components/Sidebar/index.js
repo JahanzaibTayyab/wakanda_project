@@ -4,9 +4,11 @@ import {
   Flex,
   Stack,
   Divider,
+  Spacer,
   useColorModeValue as mode,
+  VStack,
 } from "@chakra-ui/react";
-import { ArrowRightIcon,ExternalLinkIcon } from '@chakra-ui/icons'
+import { ArrowRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { connect } from "react-redux";
 import { Logo } from "../controls/DashboardLogo";
 import { MobileMenuButton } from "./MobileMenuButton";
@@ -59,11 +61,16 @@ const SideBar = (props) => {
         px="3"
         color="gray.200"
         position="fixed"
+        h="full"
+        fontSize="sm"
+        lineHeight="tall"
       >
-        <Box fontSize="sm" lineHeight="tall">
+        <VStack px={2} alignItems="start" direction="column" h="100%" spacing={8}>
+          <Logo/>
           <Box
             as="a"
             p="3"
+            px={-2}
             display="block"
             transition="background 0.1s"
             rounded="xl"
@@ -71,65 +78,57 @@ const SideBar = (props) => {
               bg: "whiteAlpha.200",
             }}
             whiteSpace="nowrap"
+            href={match.url + "/profile"}
+            cursor="pointer"
+            width="full"
           >
-            <Logo />
-            <Box as="a" href={match.url + "/profile"} cursor="pointer">
-              <UserInfo
-                name={user?.workspace}
-                email={currentUser?.email}
-                image={user?.workspaceIcon}
-              />
-            </Box>
+            <UserInfo
+              mt={0}
+              name={user?.workspace}
+              email={currentUser?.email}
+              image={user?.workspaceIcon}
+            />
           </Box>
           <ScrollArea pt="5" pb="6">
-            <Flex direction="column" justify="space-between">
-              <div>
-                <Stack pb="6">
-                  <NavSectionTitle>Widgets</NavSectionTitle>
-                  <SidebarLink
-                    icon={<ArrowRightIcon />}
-                    href={match.url + "/widgets/espresso"}
-                    fontStyle="italic"
-                  >
-                    Espresso
-                  </SidebarLink>
-                  <SidebarLink
-                    icon={<ArrowRightIcon />}
-                    showComingSoon
-                    href={match.url + "#"}
-                    fontStyle="italic"
-                  >
-                    Latte
-                  </SidebarLink>
-                  <SidebarLink
-                    icon={<ArrowRightIcon />}
-                    showComingSoon
-                    href={match.url + "#"}
-                    fontStyle="italic"
-                  >
-                    Flat white
-                  </SidebarLink>
-                  <SidebarLink
-                    icon={<ArrowRightIcon />}
-                    showComingSoon
-                    href={match.url + "#"}
-                    fontStyle="italic"
-                  >
-                    Machiatto
-                  </SidebarLink>
-                </Stack>
-              </div>
-              <Flex direction="column">
-                <Divider mb={5} />
-                <Stack pb="6">
-                  <SidebarLink icon={<ExternalLinkIcon />} onClick={logoutUser}>
-                    Logout
-                  </SidebarLink>
-                </Stack>
-              </Flex>
-            </Flex>
+              <NavSectionTitle py={2}>Widgets</NavSectionTitle>
+              <SidebarLink
+                icon={<ArrowRightIcon />}
+                href={match.url + "/widgets/espresso"}
+                fontStyle="italic"
+              >
+                Espresso
+              </SidebarLink>
+              <SidebarLink
+                icon={<ArrowRightIcon />}
+                showComingSoon
+                href={match.url + "#"}
+                fontStyle="italic"
+              >
+                Latte
+              </SidebarLink>
+              <SidebarLink
+                icon={<ArrowRightIcon />}
+                showComingSoon
+                href={match.url + "#"}
+                fontStyle="italic"
+              >
+                Flat white
+              </SidebarLink>
+              <SidebarLink
+                icon={<ArrowRightIcon />}
+                showComingSoon
+                href={match.url + "#"}
+                fontStyle="italic"
+              >
+                Machiatto
+              </SidebarLink>
+              <Spacer />
+              <Divider my={3} />
+              <SidebarLink icon={<ExternalLinkIcon />} onClick={logoutUser}>
+                Logout
+              </SidebarLink>
           </ScrollArea>
-        </Box>
+        </VStack>
       </Box>
       <Box
         flex="1"

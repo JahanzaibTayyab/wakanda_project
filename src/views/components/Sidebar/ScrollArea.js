@@ -5,7 +5,8 @@ export const ScrollArea = (props) => (
   <Box
     display="flex"
     overflowY="auto"
-    height="80vh"
+    flexDirection="column"
+    flexGrow={1}
     minH="px"
     maxH="full"
     {...props}

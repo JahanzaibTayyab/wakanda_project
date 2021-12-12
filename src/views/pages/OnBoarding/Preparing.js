@@ -14,6 +14,11 @@ import {
   generateUniqueUrl,
 } from "../../../store/actions/EmbeddedLink.js";
 import {
+  embeddedPinCode,
+  embeddedPinCodeSuccess,
+  embeddedPinCodeFailure,
+} from "../../../store/actions/Pages.js";
+import {
   findDataBase,
   resetTaskDataBaseStates,
 } from "../../../store/actions/TaskDatabase";
@@ -64,13 +69,16 @@ const Preparing = (props) => {
 };
 
 const mapStateToProps = ({ NotionAuth, EmbeddedLink, Pages, TaskDatabase }) => {
+  console.log("Embeded link state:",EmbeddedLink);
   return {
     loading: NotionAuth?.loading,
     redirectedUrl: NotionAuth?.oauthUrl?.redirectUrl,
     response: NotionAuth?.response,
     error: NotionAuth?.error,
     uniqueLinkGenerated: EmbeddedLink?.uniqueLinkGenerated,
+    uniqueLink: EmbeddedLink?.uniqueLink,
     pinCodeGenerated: EmbeddedLink?.pinCodeGenerated,
+    pinCodeEmbedded:Pages?.pinCodeEmbedded,
     embeddedLinkError: EmbeddedLink?.error,
     embeddedLinkResponse: EmbeddedLink?.response,
     databases: TaskDatabase?.databases,
@@ -98,6 +106,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     findPage: (data) => {
       dispatch(findPage(data));
+    },
+    embeddedPinCode:(data)=>{
+      dispatch(embeddedPinCode(data))
     },
     saveData: (data) => {
       dispatch(saveData(data));

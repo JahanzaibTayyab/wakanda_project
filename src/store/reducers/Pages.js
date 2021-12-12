@@ -47,6 +47,7 @@ const Pages = (state = INIT_STATE, action) => {
       return {
         ...state,
         loading: false,
+        pinCodeEmbedded:action.payload.success,
         response: action.payload,
       };
     case EMBEDDED_PIN_CODE_FAILURE:
@@ -57,7 +58,7 @@ const Pages = (state = INIT_STATE, action) => {
         status: "error",
         isClosable: true,
       });
-      return { ...state, loading: false, error: action.payload.error.message };
+      return { ...state,pinCodeEmbedded:false, loading: false, error: action.payload.error.message };
     default:
       return { ...state };
   }

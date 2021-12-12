@@ -135,6 +135,8 @@ const DashboardContent = (props) => {
             isClosable: true,
           });
           setShowChangePageModal(false);
+          setShowEmbedInNotionModal(false);
+          setDisabledEmbedWidgetButton(false);
         }
       }
     }
@@ -391,16 +393,18 @@ const DashboardContent = (props) => {
                     isInvalid={showPageError}
                   >
                     {pages?.map((page) => {
-                      return (
-                        <option value={page.id} key={page.id}>
-                          {page.properties?.Name?.title[0]?.text.content}
-                        </option>
-                      );
+                      if (page.parent.type != "database_id") {
+                        return (
+                          <option value={page.id} key={page.id}>
+                            {page.properties.title.title[0].plain_text}
+                          </option>
+                        );
+                      }
                     })}
                   </Select>
                   {showPageError && (
                     <Text color="red.400" fontSize="sm" mt={2}>
-                      Please select a page where to embed the widget.
+                      Please select a page where to embed the security pin code.
                     </Text>
                   )}
                 </Flex>

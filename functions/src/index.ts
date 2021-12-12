@@ -498,149 +498,103 @@ export const embedPinCode = functions
     .region("europe-west3")
     .https.onCall((data, context) => {
       const uid: string | undefined = context.auth?.uid;
-      if (uid) {
-        functions.logger.log("UUID", uid);
-        return db
-            .collection("users")
-            .doc(uid)
-            .get()
-            .then((doc: DocumentSnapshot) => {
-              const userData = doc.data();
-              if (
-                userData &&
-            Object.prototype.hasOwnProperty.call(userData, "pinCode")
-              ) {
-                functions.logger.log("userObject", userData);
-                return db
-                    .collection("notionAuth")
-                    .doc(uid)
-                    .withConverter(tokenConverter)
-                    .get()
-                    .then((doc: DocumentSnapshot) => {
-                      const documentData = doc.data();
-                      if (
-                        documentData &&
-                  Object.prototype.hasOwnProperty.call(
-                      documentData,
-                      "accessToken"
-                  )
-                      ) {
-                        const notion = new Client({
-                          auth: documentData.accessToken,
-                        });
-
-                        if (userData?.pinCodeBlock) {
-                          functions.logger.log("If block if pinCode exist", uid);
-                          return notion.blocks
-                              .update({
-                                block_id: userData?.pinCodeBlock,
-                                paragraph: {
-                                  text: [
-                                    {
-                                      type: "text",
-                                      text: {
-                                        content: `Pin Code : ${userData?.pinCode}`,
-                                      },
-                                    },
-                                  ],
-                                },
-                              })
-                              .then((res) => {
-                                functions.logger.log("if response", res);
-                                return {
-                                  success: true,
-                                  pinCodeBlock: res.id,
-                                };
-                              })
-                              .catch((error: NotionClientError) => {
-                                functions.logger.error(
-                                    "Error retrieving blocks:\n",
-                                    error
-                                );
-                                throw new functions.https.HttpsError(
-                                    "unknown",
-                                    error.message,
-                                    error
-                                );
-                              });
-                        } else {
-                          functions.logger.log(
-                              "else case block if pinCode  not exist"
-                          );
-                          functions.logger.log("else userData", userData);
-                          return notion.blocks.children
-                              .append({
-                                block_id: userData?.page,
-                                children: [
-                                  {
-                                    object: "block",
-                                    type: "paragraph",
-                                    id: "",
-                                    created_time: "",
-                                    last_edited_time: "",
-                                    has_children: false,
-                                    paragraph: {
-                                      text: [
-                                        {
-                                          type: "text",
-                                          text: {
-                                            content: `Pin Code : ${userData?.pinCode}`,
-                                          },
-                                          plain_text: `Pin Code : ${userData?.pinCode}`,
-                                          annotations: {
-                                            bold: false,
-                                            italic: false,
-                                            strikethrough: false,
-                                            underline: false,
-                                            code: false,
-                                            color: "default",
-                                          },
-                                          href: undefined,
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              })
-                              .then((res) => {
-                                functions.logger.log("else response", res.id);
-                                return {
-                                  success: true,
-                                  pinCodeBlock: res.id,
-                                };
-                              })
-                              .catch((error: NotionClientError) => {
-                                functions.logger.error(
-                                    "Error retrieving blocks:\n",
-                                    error
-                                );
-                                throw new functions.https.HttpsError(
-                                    "unknown",
-                                    error.message,
-                                    error
-                                );
-                              });
-                        }
-                      } else {
-                        throw new functions.https.HttpsError(
-                            "failed-precondition",
-                            "No token in doc"
-                        );
-                      }
-                    });
-              } else {
-                throw new functions.https.HttpsError(
-                    "unauthenticated",
-                    "Not authenticated"
-                );
-              }
-            });
-      } else {
+      if (!uid) {
         throw new functions.https.HttpsError(
             "unauthenticated",
             "Not authenticated"
         );
       }
+      functions.logger.log("UUID", uid);
+      return db
+          .collection("users")
+          .doc(uid)
+          .get()
+          .then((doc: DocumentSnapshot) => {
+            const userData = doc.data();
+            if (
+              !userData ||
+          !Object.prototype.hasOwnProperty.call(userData, "pinCode")
+            ) {
+              throw new functions.https.HttpsError(
+                  "failed-precondition",
+                  "Not pin code or user data"
+              );
+            }
+            functions.logger.log("userObject", userData);
+            return db
+                .collection("notionAuth")
+                .doc(uid)
+                .withConverter(tokenConverter)
+                .get()
+                .then((doc: DocumentSnapshot) => {
+                  const documentData = doc.data();
+                  if (
+                    !documentData ||
+              !Object.prototype.hasOwnProperty.call(documentData, "accessToken")
+                  ) {
+                    throw new functions.https.HttpsError(
+                        "failed-precondition",
+                        "Not notion Auth."
+                    );
+                  }
+                  const notion = new Client({
+                    auth: documentData.accessToken,
+                  });
+                  functions.logger.log("else case block if pinCode  not exist");
+                  functions.logger.log("else userData", userData);
+                  return notion.blocks.children
+                      .append({
+                        block_id: userData?.page,
+                        children: [
+                          {
+                            object: "block",
+                            type: "paragraph",
+                            id: "",
+                            created_time: "",
+                            last_edited_time: "",
+                            has_children: false,
+                            paragraph: {
+                              text: [
+                                {
+                                  type: "text",
+                                  text: {
+                                    content: `Pin Code : ${
+                              userData?.pinCode
+                                    } (valid from ${moment().format("MM-DD-YYYY hh:mm")})`,
+                                  },
+                                  plain_text: `Pin Code : ${userData?.pinCode}`,
+                                  annotations: {
+                                    bold: false,
+                                    italic: false,
+                                    strikethrough: false,
+                                    underline: false,
+                                    code: false,
+                                    color: "default",
+                                  },
+                                  href: undefined,
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      })
+                      .then((res) => {
+                        functions.logger.log("else response", res.id);
+                        return {
+                          success: true,
+                          pinCodeBlock: res.id,
+                        };
+                      })
+                      .catch((error: NotionClientError) => {
+                        functions.logger.error("Error retrieving blocks:\n", error);
+                        throw new functions.https.HttpsError(
+                            "unknown",
+                            error.message,
+                            error
+                        );
+                      });
+                });
+          });
     });
 
 /*

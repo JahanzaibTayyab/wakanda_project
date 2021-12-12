@@ -15,7 +15,7 @@ export const SidebarLink = (props) => {
       marginEnd="1"
       fontSize="sm"
       display="block"
-      px="6"
+      px="4"
       py="1"
       rounded="md"
       cursor="pointer"

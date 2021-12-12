@@ -32,13 +32,8 @@ const RefreshLink = (props) => {
         }}
       >
         <InputLeftAddon
-          children={
-            <IconButton
-              bg="transparent !important"
-              variant="ghost"
-              icon={CopyIcon}
-            />
-          }
+          onClick={onCopy}
+          children={<CopyIcon color="gray.300" />}
         />
         <Input
           type="text"

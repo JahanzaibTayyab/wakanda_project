@@ -59,13 +59,13 @@ export const OnBoardingSteps = () => {
 
           }
         </Step>
-        <Step title={embedSuccess? "Widget and code embedded.": embedError? "Error embedding the widget and code.." : embedActive? "Embedding the widget and code." :"Embed the widget and code."}
+        <Step title={embedSuccess? "Widget and code embedded.": embedError? "Error embedding the widget and code.." : embedActive? "Embedding the code." :"Embed the code."}
         textColor={embedSuccess? "gray.600": embedError? "red.400" :embedActive?"yellow.500" : "gray.400" }>
           {embedError &&
           <StepContent>
           <Stack shouldWrapChildren spacing="4">
             <Text>
-              Embed Widget and dashboard error
+              Embed pin code error
             </Text>
             </Stack>
         </StepContent>

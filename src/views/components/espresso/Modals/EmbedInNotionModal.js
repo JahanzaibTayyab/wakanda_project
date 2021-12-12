@@ -23,9 +23,10 @@ const EmbedInNotionModal = (props) => {
       duration: ModalToast.EmbedInNotion.info.duration,
       isClosable: true,
     });
-    setTimeout(() => {
-      onOk();
-    }, [3500]);
+    onOk()
+    // setTimeout(() => {
+    //   onOk();
+    // }, [3500]);
   };
   return (
     <Modal

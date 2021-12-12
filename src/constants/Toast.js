@@ -57,7 +57,7 @@ export const ModalToast = {
     },
     success: {
       title: "Page Changed!",
-      description: "Your widget will be embedded in this new page.",
+      description: "Your pin code is embedded in the new page.",
       duration: 3000,
     },
     error: {
@@ -68,16 +68,16 @@ export const ModalToast = {
   },
   EmbedInNotion: {
     info: {
-      title: "Embed widget...",
+      title: "Embedding pin code...",
       duration: 3000,
     },
     success: {
-      title: "Widget Embed!",
-      description: "Your current widget embed will be replaced",
+      title: "Pin code embeddded!",
+      description: "A new text block has been created",
       duration: 3000,
     },
     error: {
-      title: "Couldn’t widget embed",
+      title: "Couldn’t embed the pin code",
       description: "Something went wrong",
       duration: 3000,
     },

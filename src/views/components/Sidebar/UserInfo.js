@@ -10,7 +10,7 @@ import * as React from "react";
 export const UserInfo = (props) => {
   const { name, image, email } = props;
   return (
-    <HStack display="inline-flex" mt="10">
+    <HStack display="inline-flex">
       <Avatar size="sm" name={name} src={image} />
       <Box lineHeight="1">
         <Text fontWeight="semibold">{name}</Text>

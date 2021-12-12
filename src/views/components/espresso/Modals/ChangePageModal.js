@@ -47,7 +47,7 @@ const ChangePageModal = (props) => {
         </>
       }
     >
-      Your widget will be embedded in this new page.
+      Your pin code will be embedded in this new page.
     </Modal>
   );
 };
