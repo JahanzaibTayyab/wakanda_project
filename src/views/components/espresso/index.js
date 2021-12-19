@@ -10,6 +10,8 @@ import {
   Switch,
   useToast,
   Select,
+  Tooltip,
+  Link,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import RefreshLink from "./RefreshLink";
@@ -250,15 +252,12 @@ const DashboardContent = (props) => {
           </Heading>
           <Box
             flex={1}
-            px={{
-              base: 0,
-              md: 5,
-            }}
+            px={0}
             mb={10}
           >
             <SimpleGrid columns={{ sm: 1, md: 2 }}>
               <Box>
-                <Flex justify="space-between">
+                <Flex justify="space-between" align="center">
                   <Heading size="sm" fontWeight="bold">
                     Embeddable secret link
                   </Heading>
@@ -268,12 +267,21 @@ const DashboardContent = (props) => {
                       md: "none",
                     }}
                   >
-                    <InfoOutlineIcon color="gray.500" />
+                    <Tooltip
+                      hasArrow
+                      label="You can copy and paste this URL in Notion to embed the widget.
+                  You will need the 6 digit code in the Notion page to use it,
+                  this is to make sure you have signed in into your workspace.
+                  Even so this is a public URL"
+                      fontSize="lg"
+                    >
+                      <InfoOutlineIcon color="gray.700" w={4} h={4} />
+                    </Tooltip>
                   </Box>
                 </Flex>
                 <Text
                   mt={2}
-                  color="gray.500"
+                  colorf="gray.500"
                   fontSize="xs"
                   fontWeight="500"
                   display={{
@@ -332,15 +340,12 @@ const DashboardContent = (props) => {
           </Box>
           <Box
             flex={1}
-            px={{
-              base: 0,
-              md: 5,
-            }}
+            px={0}
             mb={10}
           >
             <SimpleGrid columns={{ sm: 1, md: 2 }}>
               <Box>
-                <Flex justify="space-between">
+                <Flex justify="space-between" align="center">
                   <Heading size="sm" fontWeight="bold">
                     Page for Embed
                   </Heading>
@@ -350,7 +355,15 @@ const DashboardContent = (props) => {
                       md: "none",
                     }}
                   >
-                    <InfoOutlineIcon color="gray.500" />
+                    <Tooltip
+                      hasArrow
+                      label="This is the page where the PIN code will be embedded. we will
+                      not remove anything from this page, only add the security
+                      authentication code."
+                      fontSize="lg"
+                    >
+                      <InfoOutlineIcon color="gray.700" w={4} h={4} />
+                    </Tooltip>
                   </Box>
                 </Flex>
                 <Text
@@ -366,7 +379,7 @@ const DashboardContent = (props) => {
                 >
                   This is the page where the PIN code will be embedded. we will
                   not remove anything from this page, only add the security
-                  authentication code.
+                  authentication code. The selectable contains the pages currently shared with Notion Coffee.
                 </Text>
               </Box>
               <Box>
@@ -434,14 +447,11 @@ const DashboardContent = (props) => {
           </Box>
           <Box
             flex={1}
-            px={{
-              base: 0,
-              md: 5,
-            }}
+            px={0}
           >
             <SimpleGrid columns={{ sm: 1, md: 2 }}>
               <Box>
-                <Flex justify="space-between">
+                <Flex justify="space-between" align="center">
                   <Heading size="sm" fontWeight="bold">
                     Task Database
                   </Heading>
@@ -451,7 +461,15 @@ const DashboardContent = (props) => {
                       md: "none",
                     }}
                   >
-                    <InfoOutlineIcon color="gray.500" />
+                    <Tooltip
+                      hasArrow
+                      label="This is the database where the task data will be saved. 
+                      Please, be aware that this database must contain at least the same properties 
+                      as the Notion Coffee Task Database you can find at www.notion.coffee"
+                      fontSize="lg"
+                    >
+                      <InfoOutlineIcon color="gray.700" w={4} h={4} />
+                    </Tooltip>
                   </Box>
                 </Flex>
                 <Text
@@ -468,9 +486,14 @@ const DashboardContent = (props) => {
                   This is the database where the task data will be saved.
                   Please, be aware that this database must contain at least the
                   same properties as the{" "}
-                  <a className="textUnderline">
+                  <Link
+                    isExternal
+                    textDecor="underline"
+                    href="https://mikecafe.notion.site/Notion-Coffee-Espresso-24f1ef7413b84ade8241d226cc45c706"
+                    className="textUnderline"
+                  >
                     Notion Coffee template task database.
-                  </a>
+                  </Link>
                 </Text>
               </Box>
               <Box>

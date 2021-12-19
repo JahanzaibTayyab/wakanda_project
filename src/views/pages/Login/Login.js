@@ -17,17 +17,20 @@ import {
   useToast,
   InputRightAddon,
   VisuallyHidden,
+  Center,
+  Link,
 } from "@chakra-ui/react";
 import { useLocation } from "react-router-dom";
 import { useTimer } from "use-timer";
 import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { useHistory } from "react-router-dom";
 import { AiFillFacebook } from "react-icons/ai";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Logo } from "../../components/controls/Logo";
-import Link from "../../components/controls/Link";
+// import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
 import Banner from "../../components/authenticationModules/Banner";
 import { LocalStorage } from "../../../constants/LocalStorage";
@@ -295,9 +298,15 @@ const Login = (props) => {
           </Heading>
           <Text mt="4" mb="8" align="center" maxW="md" fontWeight="small">
             <Text as="span">Don&apos;t have an account?</Text>
-            <Link href="/signup" fontWeight="bold">
+            <Button
+              ml={1}
+              colorScheme="yellow"
+              variant="link"
+              onClick={() => history.push("/signup")}
+              fontWeight="bold"
+            >
               Sign up here
-            </Link>
+            </Button>
           </Text>
           <Card>
             <Stack spacing="6">
@@ -317,11 +326,16 @@ const Login = (props) => {
                 isRequired
                 isDisabled={disabledForm}
               >
-                <Flex justify="space-between">
-                  <FormLabel>Password</FormLabel>
-                  <Link href="/forget-password" fontWeight="bold">
+                <Flex my={2} justify="space-between" align="center">
+                  <FormLabel m={0}>Password</FormLabel>
+                  <Button
+                    variant="link"
+                    colorScheme="yellow"
+                    onClick={()=>history.push("/forget-password")}
+                    fontWeight="bold"
+                  >
                     Forgot Password?
-                  </Link>
+                  </Button>
                 </Flex>
                 <InputGroup size="md">
                   <Input
@@ -338,8 +352,7 @@ const Login = (props) => {
               </FormControl>
               <Button
                 type="submit"
-                bg="yellow.600"
-                textColor="white"
+                colorScheme="yellow"
                 size="lg"
                 fontSize="md"
                 onClick={handleSubmit(onSubmit)}
@@ -365,8 +378,8 @@ const Login = (props) => {
                 <Divider borderColor="currentcolor" />
               </Box>
             </Flex>
-            <SimpleGrid mt="12" columns={2} spacing="2">
-              <Button
+            <SimpleGrid mt="12" columns={1} spacing="2">
+              {/* <Button
                 color="currentColor"
                 variant="outline"
                 disabled={disabledForm}
@@ -374,15 +387,16 @@ const Login = (props) => {
               >
                 <VisuallyHidden>Login with Facebook</VisuallyHidden>
                 <AiFillFacebook size={22} />
-              </Button>
+              </Button> */}
               <Button
-                color="currentColor"
-                variant="outline"
-                onClick={handleGoogleClick}
-                disabled={disabledForm}
+                w={"full"}
+                maxW={"md"}
+                variant={"outline"}
+                leftIcon={<FcGoogle />}
               >
-                <VisuallyHidden>Login with Google</VisuallyHidden>
-                <FaGoogle />
+                <Center>
+                  <Text>Sign in with Google</Text>
+                </Center>
               </Button>
             </SimpleGrid>
           </Card>

@@ -10,15 +10,15 @@ import { HiChevronRight } from "react-icons/hi";
 import { withRouter } from "react-router-dom";
 
 const NavBreadcrumb = (props) => {
-  const {
-    location: { pathname },
+  const {staticContext,
+    location: { pathname }, ...rest
   } = props;
   const pathNames = pathname.split("/").filter((x) => x);
   return (
     <Breadcrumb
       fontSize="sm"
       display={{ base: "flex", md: "none" }}
-      {...props}
+      {...rest}
       separator={
         <Box
           as={HiChevronRight}
@@ -36,6 +36,7 @@ const NavBreadcrumb = (props) => {
             color={isLast ? "gray.800" : "gray.500"}
             textTransform={isLast && "capitalize"}
             isLastChild={isLast}
+            key={index}
           >
             <BreadcrumbLink>{name}</BreadcrumbLink>
           </BreadcrumbItem>

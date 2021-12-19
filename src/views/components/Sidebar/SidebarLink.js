@@ -8,7 +8,7 @@ import {
 import * as React from "react";
 
 export const SidebarLink = (props) => {
-  const { children, icon = <ArrowRight />, avatar, ...rest } = props;
+  const { children, icon = <ArrowRight />,showComingSoon, avatar, ...rest } = props;
   return (
     <Box
       as="a"
@@ -38,13 +38,13 @@ export const SidebarLink = (props) => {
           {avatar || icon}
         </Box>
         <Text>{children}</Text>
-        {props.showComingSoon && (
+        {props.showComingSoon? (
           <Box bg={mode("yellow.100", "yellow.700")} borderRadius="sm">
             <Text fontSize="8" fontWeight="bold" color="yellow.800" p="1">
               COMING SOON
             </Text>
           </Box>
-        )}
+        ):""}
       </HStack>
     </Box>
   );

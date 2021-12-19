@@ -36,11 +36,12 @@ const SideBar = (props) => {
     localStorage.removeItem(LocalStorage.USER_ID);
     localStorage.removeItem(LocalStorage.WAKANDA_EMAIL);
     history.push("/login");
-    window.location.reload(true);
+    // window.location.reload(true);
   };
   useEffect(() => {
     props.getProfile();
   }, []);
+
 
   return (
     <Flex
@@ -65,8 +66,14 @@ const SideBar = (props) => {
         fontSize="sm"
         lineHeight="tall"
       >
-        <VStack px={2} alignItems="start" direction="column" h="100%" spacing={8}>
-          <Logo/>
+        <VStack
+          px={2}
+          alignItems="start"
+          direction="column"
+          h="100%"
+          spacing={8}
+        >
+          <Logo />
           <Box
             as="a"
             p="3"
@@ -78,7 +85,7 @@ const SideBar = (props) => {
               bg: "whiteAlpha.200",
             }}
             whiteSpace="nowrap"
-            href={match.url + "/profile"}
+            onClick={()=>history.push(match.url + "/profile")}
             cursor="pointer"
             width="full"
           >
@@ -90,43 +97,40 @@ const SideBar = (props) => {
             />
           </Box>
           <ScrollArea pt="5" pb="6">
-              <NavSectionTitle py={2}>Widgets</NavSectionTitle>
-              <SidebarLink
-                icon={<ArrowRightIcon />}
-                href={match.url + "/widgets/espresso"}
-                fontStyle="italic"
-              >
-                Espresso
-              </SidebarLink>
-              <SidebarLink
-                icon={<ArrowRightIcon />}
-                showComingSoon
-                href={match.url + "#"}
-                fontStyle="italic"
-              >
-                Latte
-              </SidebarLink>
-              <SidebarLink
-                icon={<ArrowRightIcon />}
-                showComingSoon
-                href={match.url + "#"}
-                fontStyle="italic"
-              >
-                Flat white
-              </SidebarLink>
-              <SidebarLink
-                icon={<ArrowRightIcon />}
-                showComingSoon
-                href={match.url + "#"}
-                fontStyle="italic"
-              >
-                Machiatto
-              </SidebarLink>
-              <Spacer />
-              <Divider my={3} />
-              <SidebarLink icon={<ExternalLinkIcon />} onClick={logoutUser}>
-                Logout
-              </SidebarLink>
+            <NavSectionTitle py={2}>Widgets</NavSectionTitle>
+            <SidebarLink
+              icon={<ArrowRightIcon />}
+              onClick={()=>history.push(match.url + "/widgets/espresso")}
+              fontStyle="italic"
+            >
+              Espresso
+            </SidebarLink>
+            <SidebarLink
+              icon={<ArrowRightIcon />}
+              showComingSoon
+              fontStyle="italic"
+            >
+              Latte
+            </SidebarLink>
+            <SidebarLink
+              icon={<ArrowRightIcon />}
+              showComingSoon
+              fontStyle="italic"
+            >
+              Flat white
+            </SidebarLink>
+            <SidebarLink
+              icon={<ArrowRightIcon />}
+              showComingSoon
+              fontStyle="italic"
+            >
+              Machiatto
+            </SidebarLink>
+            <Spacer />
+            <Divider my={3} />
+            <SidebarLink icon={<ExternalLinkIcon />} onClick={logoutUser}>
+              Logout
+            </SidebarLink>
           </ScrollArea>
         </VStack>
       </Box>
@@ -164,7 +168,13 @@ const SideBar = (props) => {
                 <NavBreadcrumb />
               </Flex>
             </Flex>
-            <Flex direction="column" flex="1" overflow="auto" px="10" pt="8">
+            <Flex
+              direction="column"
+              flex="1"
+              overflow="auto"
+              px={{base:"4",md:"10"}}
+              pt="8"
+            >
               {children}
             </Flex>
           </Flex>

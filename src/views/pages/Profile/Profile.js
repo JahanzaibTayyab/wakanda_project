@@ -103,7 +103,7 @@ const Profile = (props) => {
               logout();
               localStorage.clear();
               history.push("/login");
-              window.location.reload(true);
+              // window.location.reload(true);
             } catch (error) {
               toast({
                 position: "bottom-right",

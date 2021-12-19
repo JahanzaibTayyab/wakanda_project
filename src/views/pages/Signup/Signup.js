@@ -18,9 +18,9 @@ import {
   FormErrorMessage,
   InputRightAddon,
   useToast,
+  Center,
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
-import { FaGoogle } from "react-icons/fa";
 import { AiFillFacebook } from "react-icons/ai";
 import { FiExternalLink } from "react-icons/fi";
 import * as yup from "yup";
@@ -31,6 +31,7 @@ import Link from "../../components/controls/Link";
 import Card from "../../components/controls/Card";
 import { useAuth } from "../../../contexts/AuthContext";
 import { LocalStorage } from "../../../constants/LocalStorage";
+import { FcGoogle } from "react-icons/fc";
 
 const schema = yup.object().shape({
   email: yup.string().email().required(),
@@ -146,9 +147,15 @@ const Signup = (props) => {
           </Heading>
           <Text mt="4" mb="8" align="center" maxW="md" fontWeight="small">
             <Text as="span">Already have an account?</Text>
-            <Link href="/sigin" fontWeight="bold">
+            <Button
+              ml={1}
+              colorScheme="yellow"
+              variant="link"
+              onClick={() => history.push("/login")}
+              fontWeight="bold"
+            >
               Sign in
-            </Link>
+            </Button>
           </Text>
           <Card>
             <Stack spacing="6">
@@ -234,7 +241,7 @@ const Signup = (props) => {
                   I read and accept the
                   <Link
                     href="https://www.notion.so/mikecafe/Terms-and-Conditions-7ff554e60e3d48069849821d14a4c9f9"
-                    isExternal={true}
+                    isExternal
                   >
                     <Text pr="1" as="u" fontWeight={500}>
                       terms & conditions{" "}
@@ -252,7 +259,7 @@ const Signup = (props) => {
                   I read and accept the
                   <Link
                     href="https://www.notion.so/mikecafe/Privacy-Policy-509f3be10de7493db4f09f59519b2ece"
-                    isExternal={true}
+                    isExternal
                   >
                     <Text pr="1" as="u" fontWeight={500}>
                       privacy policy
@@ -263,8 +270,7 @@ const Signup = (props) => {
               </FormControl>
               <Button
                 type="submit"
-                bg="yellow.600"
-                textColor="white"
+                colorScheme="yellow"
                 size="lg"
                 fontSize="md"
                 onClick={handleSubmit(onSubmit)}
@@ -297,8 +303,8 @@ const Signup = (props) => {
                 <Divider borderColor="currentcolor" />
               </Box>
             </Flex>
-            <SimpleGrid mt="12" columns={2} spacing="2">
-              <Button
+            <SimpleGrid mt="12" columns={1} spacing="2">
+              {/* <Button
                 color="currentColor"
                 variant="outline"
                 isDisabled={disabledForm}
@@ -306,16 +312,19 @@ const Signup = (props) => {
               >
                 <VisuallyHidden>Login with Facebook</VisuallyHidden>
                 <AiFillFacebook size={22} />
-              </Button>
+              </Button> */}
               <Button
-                color="currentColor"
-                variant="outline"
-                isDisabled={disabledForm}
-                onClick={handleGoogleClick}
+                w={"full"}
+                maxW={"md"}
+                variant={"outline"}
+                leftIcon={<FcGoogle />}
               >
-                <VisuallyHidden>Login with Google</VisuallyHidden>
-                <FaGoogle />
+                <Center>
+                  <Text>Sign up with Google</Text>
+                </Center>
               </Button>
+              {/* <VisuallyHidden>Login with Google</VisuallyHidden>
+                <FaGoogle /> */}
             </SimpleGrid>
           </Card>
         </Box>

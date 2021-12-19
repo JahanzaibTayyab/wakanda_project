@@ -7,7 +7,7 @@ const Card = (props) => (
     py="8"
     px={{
       base: "4",
-      md: "10",
+      md: "5",
     }}
     shadow="base"
     rounded={{

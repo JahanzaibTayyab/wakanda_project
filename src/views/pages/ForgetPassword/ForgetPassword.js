@@ -89,9 +89,15 @@ const ForgetPassword = (props) => {
           </Heading>
           <Text mt="4" mb="8" align="center" maxW="md" fontWeight="small">
             <Text as="span">Did you remember password?</Text>
-            <Link href="/login" fontWeight="bold">
-              Sign in here
-            </Link>
+            <Button
+              colorScheme="yellow"
+              ml={1}
+              variant="link"
+              onClick={() => history.push("/login")}
+              fontWeight="bold"
+            >
+              Sign in
+            </Button>
           </Text>
           <Card>
             <Stack spacing="6">
